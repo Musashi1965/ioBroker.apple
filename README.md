@@ -280,6 +280,8 @@ replacement tree has been projected for a discovered paired device.
 - Initial Apple TV discovery, secure pairing, status projection, remote control,
   application catalog, and application launch vertical slice.
 
+[Older changelogs can be found there](CHANGELOG_OLD.md)
+
 ## License
 
 Copyright (c) 2026 C@ptain Ch@os
