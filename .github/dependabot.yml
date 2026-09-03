@@ -8,7 +8,8 @@ updates:
           timezone: Europe/Berlin
       cooldown:
           default-days: 7
-      open-pull-requests-limit: 15
+      # Routine npm updates resume after the initial public release.
+      open-pull-requests-limit: 0
       assignees:
           - Musashi1965
       versioning-strategy: increase
@@ -19,27 +20,6 @@ updates:
           - dependency-name: 'typescript'
             update-types:
                 - version-update:semver-major
-          - dependency-name: '@vitejs/plugin-react'
-            versions:
-                - '6.1.0'
-          - dependency-name: '@types/react-dom'
-            versions:
-                - '19.2.5'
-          - dependency-name: '@iobroker/json-config'
-            versions:
-                - '9.0.23'
-          - dependency-name: '@module-federation/runtime'
-            versions:
-                - '2.9.0'
-          - dependency-name: '@types/react'
-            versions:
-                - '19.2.18'
-          - dependency-name: '@module-federation/vite'
-            versions:
-                - '1.21.0'
-          - dependency-name: 'vite'
-            versions:
-                - '8.2.2'
 
     - package-ecosystem: github-actions
       directory: '/'
