@@ -3,10 +3,10 @@
 <img src="admin/apple-logo.png" alt="ioBroker Apple adapter logo" width="128">
 
 `iobroker.apple` discovers and controls supported Apple media devices in the
-local network. Version 0.2 is the current released Apple TV vertical slice. The
-unreleased development version also contains a conservative HomePod preview for
-public hardware testing. Its object contracts are designed for ioBroker
-automations and visualizations without exposing Apple protocol details.
+local network. Version 0.2 is the current development baseline. It contains an
+Apple TV vertical slice and a conservative HomePod preview for public hardware
+testing. Its object contracts are designed for ioBroker automations and
+visualizations without exposing Apple protocol details.
 
 ## Current development scope
 

@@ -61,6 +61,7 @@
   "main": "build/main.js",
   "files": [
     "admin{,/!(src)/**}/!(tsconfig|tsconfig.*|.eslintrc).{json,json5}",
+    "!admin/custom/mf-stats.json",
     "admin{,/!(src)/**}/*.{html,css,png,svg,jpg,js}",
     "build/",
     "www/",
