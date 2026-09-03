@@ -24,12 +24,12 @@ describe('ioBroker timer scheduler', () => {
 		});
 
 		let timeoutCalled = false;
-		const timeout = scheduler.setTimeout(() => {
+		const timeout = scheduler.scheduleTimeout(() => {
 			timeoutCalled = true;
 		}, 25);
-		const interval = scheduler.setInterval(() => undefined, 50);
-		scheduler.clearTimeout(timeout);
-		scheduler.clearInterval(interval);
+		const interval = scheduler.scheduleInterval(() => undefined, 50);
+		scheduler.cancelTimeout(timeout);
+		scheduler.cancelInterval(interval);
 
 		expect(timeoutCalled).to.equal(true);
 		expect(calls).to.deep.equal(['setTimeout:25', 'setInterval:50', 'clearTimeout:11', 'clearInterval:12']);

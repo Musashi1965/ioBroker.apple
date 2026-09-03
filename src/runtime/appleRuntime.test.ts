@@ -763,20 +763,20 @@ class TimerSchedulerFake implements TimerScheduler {
 	public readonly activeIntervals = new Set<TimerHandle>();
 	private sequence = 0;
 
-	public setTimeout(_callback: () => void, _delayMs: number): TimerHandle {
+	public scheduleTimeout(_callback: () => void, _delayMs: number): TimerHandle {
 		return { id: ++this.sequence, kind: 'timeout' };
 	}
 
-	public clearTimeout(_handle: TimerHandle): void {}
+	public cancelTimeout(_handle: TimerHandle): void {}
 
-	public setInterval(_callback: () => void, delayMs: number): TimerHandle {
+	public scheduleInterval(_callback: () => void, delayMs: number): TimerHandle {
 		const handle = { id: ++this.sequence, kind: 'interval' };
 		this.intervalDelays.push(delayMs);
 		this.activeIntervals.add(handle);
 		return handle;
 	}
 
-	public clearInterval(handle: TimerHandle): void {
+	public cancelInterval(handle: TimerHandle): void {
 		this.activeIntervals.delete(handle);
 	}
 }

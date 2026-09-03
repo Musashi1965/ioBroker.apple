@@ -62,7 +62,7 @@ export class AppleDiscoveryProcess {
 				}
 				settled = true;
 				if (handles.timeout !== undefined) {
-					this.timers.clearTimeout(handles.timeout);
+					this.timers.cancelTimeout(handles.timeout);
 				}
 				child.removeAllListeners();
 				this.activeChild = undefined;
@@ -75,7 +75,7 @@ export class AppleDiscoveryProcess {
 				}
 			};
 			this.activeCancel = () => finish(undefined, new AppleDiscoveryError('cancelled'));
-			handles.timeout = this.timers.setTimeout(
+			handles.timeout = this.timers.scheduleTimeout(
 				() => finish(undefined, new AppleDiscoveryError('timeout')),
 				timeoutMs,
 			);
@@ -114,12 +114,12 @@ function terminate(child: ChildProcess, timers: TimerScheduler): void {
 	}
 	if (child.exitCode === null && child.signalCode === null) {
 		child.kill('SIGTERM');
-		const forceKill = timers.setTimeout(() => {
+		const forceKill = timers.scheduleTimeout(() => {
 			if (child.exitCode === null && child.signalCode === null) {
 				child.kill('SIGKILL');
 			}
 		}, 1000);
-		child.once('exit', () => timers.clearTimeout(forceKill));
+		child.once('exit', () => timers.cancelTimeout(forceKill));
 	}
 }
 

@@ -368,7 +368,7 @@ function safeModel(model: string): string {
 function withTimeout<T>(operation: Promise<T>, timeoutMs: number, timers: TimerScheduler): Promise<T> {
 	return new Promise<T>((resolve, reject) => {
 		let settled = false;
-		const timer = timers.setTimeout(() => {
+		const timer = timers.scheduleTimeout(() => {
 			if (!settled) {
 				settled = true;
 				reject(new HomePodConnectTimeoutError());
@@ -378,14 +378,14 @@ function withTimeout<T>(operation: Promise<T>, timeoutMs: number, timers: TimerS
 			value => {
 				if (!settled) {
 					settled = true;
-					timers.clearTimeout(timer);
+					timers.cancelTimeout(timer);
 					resolve(value);
 				}
 			},
 			error => {
 				if (!settled) {
 					settled = true;
-					timers.clearTimeout(timer);
+					timers.cancelTimeout(timer);
 					reject(error instanceof Error ? error : new HomePodConnectionError());
 				}
 			},

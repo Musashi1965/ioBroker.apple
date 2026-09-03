@@ -131,7 +131,7 @@ export class AppleTvPairing {
 	/** Arms the remaining idle portion of the single pairing deadline. */
 	private armExpiry(): void {
 		const remaining = Math.max(1, (this.expiresAt ?? Date.now()) - Date.now());
-		this.expiry = this.timers.setTimeout(() => this.expireActive(), remaining);
+		this.expiry = this.timers.scheduleTimeout(() => this.expireActive(), remaining);
 	}
 
 	/** Expires and forgets the active secret-bearing session. */
@@ -153,7 +153,7 @@ export class AppleTvPairing {
 		const remaining = Math.max(1, (this.expiresAt ?? Date.now()) - Date.now());
 		return new Promise<T>((resolve, reject) => {
 			let settled = false;
-			this.expiry = this.timers.setTimeout(() => {
+			this.expiry = this.timers.scheduleTimeout(() => {
 				if (!settled) {
 					settled = true;
 					this.expireActive();
@@ -182,7 +182,7 @@ export class AppleTvPairing {
 	/** Clears the bounded session timeout. */
 	private clearExpiry(): void {
 		if (this.expiry !== undefined) {
-			this.timers.clearTimeout(this.expiry);
+			this.timers.cancelTimeout(this.expiry);
 			this.expiry = undefined;
 		}
 	}

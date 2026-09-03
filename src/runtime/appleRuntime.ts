@@ -314,7 +314,7 @@ export class AppleRuntime {
 		await this.projection.retainManagedAirPlayReceivers(this.activeManagedDeviceIds('airplayReceiver'));
 		await this.refresh();
 		if (!this.stopping) {
-			this.timer = this.timers.setInterval(() => void this.refresh(), this.discoveryIntervalMs);
+			this.timer = this.timers.scheduleInterval(() => void this.refresh(), this.discoveryIntervalMs);
 		}
 	}
 
@@ -1013,7 +1013,7 @@ export class AppleRuntime {
 	public async stop(): Promise<void> {
 		this.stopping = true;
 		if (this.timer !== undefined) {
-			this.timers.clearInterval(this.timer);
+			this.timers.cancelInterval(this.timer);
 			this.timer = undefined;
 		}
 		this.discovery.cancel();
