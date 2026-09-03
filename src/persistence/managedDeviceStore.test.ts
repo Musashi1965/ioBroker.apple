@@ -2,7 +2,7 @@
 
 import { expect } from 'chai';
 import { chmod, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
-import { tmpdir } from 'node:os';
+import { platform, tmpdir } from 'node:os';
 import { join } from 'node:path';
 
 import { ManagedDeviceStore, ManagedDeviceStoreError } from './managedDeviceStore';
@@ -37,7 +37,9 @@ describe('ManagedDeviceStore', () => {
 					enabled: false,
 				},
 			]);
-			expect(await reloaded.fileMode()).to.equal(0o600);
+			if (platform() !== 'win32') {
+				expect(await reloaded.fileMode()).to.equal(0o600);
+			}
 			expect(await reloaded.remove('homepod', '020000000002')).to.equal(true);
 			expect(await reloaded.remove('homepod', '020000000002')).to.equal(false);
 			expect(JSON.parse(await readFile(fixture.filePath, 'utf8'))).to.deep.equal({ version: 1, devices: [] });

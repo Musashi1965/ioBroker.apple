@@ -1,8 +1,21 @@
 {
 	"common": {
 		"name": "apple",
-		"version": "0.3.0",
+		"version": "0.3.1",
 		"news": {
+			"0.3.1": {
+				"en": "Fix Windows release test compatibility for managed-device persistence",
+				"de": "Windows-Kompatibilität des Release-Tests für die Managed-Device-Persistenz korrigiert",
+				"ru": "Исправлена совместимость release-теста Windows для хранения управляемых устройств",
+				"pt": "Corrige a compatibilidade do teste de release no Windows para persistência de dispositivos gerenciados",
+				"nl": "Verbetert Windows-compatibiliteit van de releasetest voor beheerde-apparaatopslag",
+				"fr": "Corrige la compatibilité Windows du test de release pour la persistance des appareils gérés",
+				"it": "Corregge la compatibilità Windows del test di release per la persistenza dei dispositivi gestiti",
+				"es": "Corrige la compatibilidad del test de release en Windows para la persistencia de dispositivos gestionados",
+				"pl": "Poprawia zgodność testu wydania w Windows dla trwałego zapisu zarządzanych urządzeń",
+				"uk": "Виправлено сумісність release-тесту Windows для збереження керованих пристроїв",
+				"zh-cn": "修复托管设备持久化在 Windows 发布测试中的兼容性"
+			},
 			"0.3.0": {
 				"en": "BREAKING: Require Admin 8, add HomePod and AirPlay Receiver adoption and controls, Apple TV openurl commands, and a German/English Admin language switch",
 				"de": "BREAKING: Admin 8 erforderlich, HomePod- und AirPlay-Receiver-Adoption und Steuerung, Apple-TV-openurl-Befehle sowie deutschen/englischen Admin-Sprachumschalter ergänzt",

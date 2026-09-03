@@ -222,6 +222,10 @@ pre-1.0 compatibility and migration policy, are documented in
 
 No unreleased changes.
 
+### 0.3.1 - 2026-09-03
+
+- Fix Windows release test compatibility for managed-device persistence.
+
 ### 0.3.0 - 2026-09-03
 
 #### BREAKING
