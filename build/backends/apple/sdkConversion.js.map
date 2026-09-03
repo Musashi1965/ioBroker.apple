@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../src/backends/apple/sdkConversion.ts"],
+  "sourcesContent": ["import type { DiscoveryResult } from '@basmilius/apple-common' with {\n\t'resolution-mode': 'import',\n};\n\nimport type { AppleDiscoveryService } from './discoveryTypes';\n\n/**\n * Reconstructs the SDK discovery shape from the isolated worker transport.\n *\n * The SDK connection paths use endpoint, identity, TXT, and feature fields;\n * the parsed DNS packet is deliberately not transported across processes.\n *\n * @param service - Validated serializable service.\n * @returns SDK-internal discovery result.\n */\nexport function toSdkDiscoveryResult(service: AppleDiscoveryService): DiscoveryResult {\n\treturn {\n\t\tid: service.id,\n\t\tfqdn: service.fqdn,\n\t\taddress: service.address,\n\t\tmodelName: service.modelName,\n\t\tfamilyName: service.familyName,\n\t\tservice: service.service,\n\t\tpacket: {},\n\t\ttxt: service.txt,\n\t\tfeatures: service.features === undefined ? undefined : BigInt(service.features),\n\t} as unknown as DiscoveryResult;\n}\n"],
+  "mappings": ";;;;;;;;;;;;;;;;;;AAAA;AAAA;AAAA;AAAA;AAAA;AAeO,SAAS,qBAAqB,SAAiD;AACrF,SAAO;AAAA,IACN,IAAI,QAAQ;AAAA,IACZ,MAAM,QAAQ;AAAA,IACd,SAAS,QAAQ;AAAA,IACjB,WAAW,QAAQ;AAAA,IACnB,YAAY,QAAQ;AAAA,IACpB,SAAS,QAAQ;AAAA,IACjB,QAAQ,CAAC;AAAA,IACT,KAAK,QAAQ;AAAA,IACb,UAAU,QAAQ,aAAa,SAAY,SAAY,OAAO,QAAQ,QAAQ;AAAA,EAC/E;AACD;",
+  "names": []
+}

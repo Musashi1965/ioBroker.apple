@@ -1,6 +1,5 @@
 # Dependencies and build output
 node_modules/
-build/
 dist/
 .poc-build/
 .__mf__temp/

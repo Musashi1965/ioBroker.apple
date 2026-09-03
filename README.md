@@ -220,6 +220,10 @@ pre-1.0 compatibility and migration policy, are documented in
 
 ### **WORK IN PROGRESS**
 
+No unreleased changes.
+
+### 0.3.0 - 2026-09-03
+
 #### BREAKING
 
 - Require ioBroker Admin 8 and migrate all custom configuration components to

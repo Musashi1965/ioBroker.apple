@@ -1,8 +1,21 @@
 {
 	"common": {
 		"name": "apple",
-		"version": "0.2.0",
+		"version": "0.3.0",
 		"news": {
+			"0.3.0": {
+				"en": "BREAKING: Require Admin 8, add HomePod and AirPlay Receiver adoption and controls, Apple TV openurl commands, and a German/English Admin language switch",
+				"de": "BREAKING: Admin 8 erforderlich, HomePod- und AirPlay-Receiver-Adoption und Steuerung, Apple-TV-openurl-Befehle sowie deutschen/englischen Admin-Sprachumschalter ergänzt",
+				"ru": "BREAKING: Требуется Admin 8, добавлены принятие и управление HomePod и AirPlay Receiver, команды Apple TV openurl и переключатель языка Admin de/en",
+				"pt": "BREAKING: Requer Admin 8, adiciona adoção e controle de HomePod e AirPlay Receiver, comandos openurl da Apple TV e alternância de idioma Admin alemão/inglês",
+				"nl": "BREAKING: Vereist Admin 8, voegt HomePod- en AirPlay Receiver-adoptie en bediening, Apple TV openurl-opdrachten en Duitse/Engelse Admin-taalschakelaar toe",
+				"fr": "BREAKING: Admin 8 requis, ajout de l’adoption et du contrôle HomePod/AirPlay Receiver, des commandes openurl Apple TV et d’un sélecteur Admin allemand/anglais",
+				"it": "BREAKING: Richiede Admin 8, aggiunge adozione e controllo HomePod/AirPlay Receiver, comandi openurl Apple TV e selettore lingua Admin tedesco/inglese",
+				"es": "BREAKING: Requiere Admin 8, añade adopción y control de HomePod y AirPlay Receiver, comandos openurl de Apple TV y selector de idioma Admin alemán/inglés",
+				"pl": "BREAKING: Wymaga Admin 8, dodaje adopcję i sterowanie HomePod oraz AirPlay Receiver, polecenia Apple TV openurl i przełącznik języka Admin de/en",
+				"uk": "BREAKING: Потрібен Admin 8, додано прийняття й керування HomePod та AirPlay Receiver, команди Apple TV openurl і перемикач мови Admin de/en",
+				"zh-cn": "BREAKING：需要 Admin 8，新增 HomePod 和 AirPlay Receiver 采用与控制、Apple TV openurl 命令以及德语/英语 Admin 语言切换"
+			},
 			"0.2.0": {
 				"en": "BREAKING: Refined the Apple device-class tree, separated remote, playback, and power controls, centralized command results, and added HomePod and AirPlay receiver discovery counts",
 				"de": "BREAKING: Apple-Geräteklassenbaum überarbeitet, Remote-, Wiedergabe- und Power-Steuerung getrennt, Befehlsergebnisse zentralisiert und Discovery-Zähler für HomePod und AirPlay Receiver ergänzt",

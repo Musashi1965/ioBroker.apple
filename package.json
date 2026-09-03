@@ -1,6 +1,6 @@
 {
   "name": "iobroker.apple",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Discover and control Apple media devices on the local network",
   "author": {
     "name": "C@ptain Ch@os",
