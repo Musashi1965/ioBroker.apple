@@ -1,0 +1,120 @@
+name: Test and Release
+
+# Run the routine Linux gate on pushes and pull requests.
+# Semantic-version tags and manual runs additionally execute the full OS matrix.
+on:
+    workflow_dispatch: {}
+    push:
+        branches:
+            - 'main'
+        tags:
+            # normal versions
+            - 'v[0-9]+.[0-9]+.[0-9]+'
+            # pre-releases
+            - 'v[0-9]+.[0-9]+.[0-9]+-**'
+    pull_request: {}
+
+# Cancel previous PR/branch runs when a new commit is pushed
+concurrency:
+    group: ${{ github.ref }}
+    cancel-in-progress: true
+
+jobs:
+    # Performs quick checks before the expensive test runs
+    check-and-lint:
+        if: contains(github.event.head_commit.message, '[skip ci]') == false
+
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: ioBroker/testing-action-check@v2
+              with:
+                  node-version: '22.x'
+                  # Uncomment the following line if your adapter cannot be installed using 'npm ci'
+                  # install-command: 'npm install'
+                  type-checking: true
+                  lint: true
+
+    # Routine adapter tests on the primary ioBroker deployment platform
+    adapter-tests:
+        if: contains(github.event.head_commit.message, '[skip ci]') == false
+        needs: check-and-lint
+
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                node-version: [22.x, 24.x, 26.x]
+
+        steps:
+            - uses: ioBroker/testing-action-adapter@v1
+              with:
+                  node-version: ${{ matrix.node-version }}
+                  os: ubuntu-latest
+                  # Uncomment the following line if your adapter cannot be installed using 'npm ci'
+                  # install-command: 'npm install'
+                  build: true
+
+    # Adds Windows and macOS for a complete 3 x 3 release/readiness matrix
+    cross-platform-tests:
+        if: |
+            contains(github.event.head_commit.message, '[skip ci]') == false &&
+            (github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/v'))
+        needs: check-and-lint
+
+        runs-on: ${{ matrix.os }}
+        strategy:
+            fail-fast: false
+            matrix:
+                node-version: [22.x, 24.x, 26.x]
+                os: [windows-latest, macos-latest]
+
+        steps:
+            - uses: ioBroker/testing-action-adapter@v1
+              with:
+                  node-version: ${{ matrix.node-version }}
+                  os: ${{ matrix.os }}
+                  # Uncomment the following line if your adapter cannot be installed using 'npm ci'
+                  # install-command: 'npm install'
+                  build: true
+
+# TODO: To enable automatic npm releases, set up trusted publishing in your npm account
+# See https://docs.npmjs.com/trusted-publishers for more details
+# Then uncomment the following block:
+
+#  # Deploys the final package to NPM
+#  deploy:
+#    needs: [check-and-lint, adapter-tests, cross-platform-tests]
+#
+#    # Trigger this step only when a commit on any branch is tagged with a version number
+#    if: |
+#      contains(github.event.head_commit.message, '[skip ci]') == false &&
+#      github.event_name == 'push' &&
+#      startsWith(github.ref, 'refs/tags/v')
+#
+#    runs-on: ubuntu-latest
+#
+#    # Write permissions are required to create Github releases
+#    permissions:
+#      id-token: write
+#      contents: write
+#
+#    steps:
+#      - uses: ioBroker/testing-action-deploy@v1
+#        with:
+#          node-version: '22.x'
+#          # Uncomment the following line if your adapter cannot be installed using 'npm ci'
+#          # install-command: 'npm install'
+#          build: true
+#          github-token: ${{ secrets.GITHUB_TOKEN }}
+#
+#          # When using Sentry for error reporting, Sentry can be informed about new releases
+#          # To enable create a API-Token in Sentry (User settings, API keys)
+#          # Enter this token as a GitHub secret (with name SENTRY_AUTH_TOKEN) in the repository options
+#          # Then uncomment and customize the following block:
+#          sentry: true
+#          sentry-token: ${{ secrets.SENTRY_AUTH_TOKEN }}
+#          sentry-project: "iobroker-apple"
+#          sentry-version-prefix: "iobroker.apple"
+#          sentry-sourcemap-paths: "build/"
+#          # If your sentry project is linked to a GitHub repository, you can enable the following option
+#          # sentry-github-integration: true

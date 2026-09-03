@@ -1,0 +1,132 @@
+{
+	"i18n": true,
+	"type": "tabs",
+	"items": {
+		"general": {
+			"type": "panel",
+			"label": "General",
+			"items": {
+				"interfaceLanguageHeader": { "type": "header", "size": 2, "text": "User interface" },
+				"interfaceLanguage": {
+					"type": "custom",
+					"url": "custom/customComponents.js",
+					"name": "AppleAdminComponents/Components/InterfaceLanguageSelector",
+					"guiApi": 2,
+					"xs": 12,
+					"newLine": true
+				},
+				"discoveryHeader": { "type": "header", "size": 2, "text": "Discovery", "newLine": true },
+				"adapterLogo": {
+					"type": "staticImage",
+					"src": "apple-logo.png",
+					"xs": 12,
+					"sm": 3,
+					"md": 3,
+					"lg": 3,
+					"newLine": true,
+					"style": { "width": 128, "height": 128, "margin": "0 16px 16px 0" }
+				},
+				"discoveryInterval": {
+					"type": "number",
+					"xs": 12,
+					"sm": 9,
+					"md": 9,
+					"lg": 9,
+					"label": "Discovery interval",
+					"help": "How often supported Apple devices are rediscovered and unavailable active devices are retried.",
+					"min": 30,
+					"max": 3600,
+					"step": 30,
+					"unit": "s",
+					"default": 60
+				},
+				"appleAccountHeader": {
+					"type": "header",
+					"size": 2,
+					"text": "Apple Account",
+					"newLine": true
+				},
+				"appleAccountPlaceholder": {
+					"type": "infoBox",
+					"text": "Apple Account access is not configured yet. Credentials will only be added after the authorization and secure-storage contract has been defined.",
+					"boxType": "info"
+				}
+			}
+		},
+		"devices": {
+			"type": "panel",
+			"label": "Devices",
+			"items": {
+				"appleTvHeader": { "type": "header", "size": 2, "text": "Apple TV" },
+				"appleTvDiscoveryOverview": {
+					"type": "textSendTo",
+					"label": "Detected Apple TVs",
+					"command": "getAppleTvDiscoveryOverview"
+				},
+				"appleTvDiscoveryHint": {
+					"type": "infoBox",
+					"text": "For reliable discovery, please make sure that all devices are switched on.",
+					"boxType": "info"
+				},
+				"appleTvManagement": {
+					"type": "custom",
+					"url": "custom/customComponents.js",
+					"name": "AppleAdminComponents/Components/AppleTvManagement",
+					"guiApi": 2,
+					"xs": 12,
+					"newLine": true
+				},
+				"homePodHeader": {
+					"type": "header",
+					"size": 2,
+					"text": "HomePod",
+					"newLine": true
+				},
+				"homePodDiscoveryOverview": {
+					"type": "textSendTo",
+					"label": "Detected HomePods",
+					"command": "getHomePodDiscoveryOverview"
+				},
+				"homePodManagement": {
+					"type": "custom",
+					"url": "custom/customComponents.js",
+					"name": "AppleAdminComponents/Components/HomePodManagement",
+					"guiApi": 2,
+					"xs": 12,
+					"newLine": true
+				},
+				"airPlayReceiverHeader": {
+					"type": "header",
+					"size": 2,
+					"text": "AirPlay Receiver",
+					"newLine": true
+				},
+				"airPlayReceiverDiscoveryOverview": {
+					"type": "textSendTo",
+					"label": "Detected AirPlay receivers",
+					"command": "getAirPlayReceiverDiscoveryOverview"
+				},
+				"airPlayReceiverManagement": {
+					"type": "custom",
+					"url": "custom/customComponents.js",
+					"name": "AppleAdminComponents/Components/AirPlayReceiverManagement",
+					"guiApi": 2,
+					"xs": 12,
+					"newLine": true
+				}
+			}
+		},
+		"appleMusic": {
+			"type": "panel",
+			"label": "Apple Music",
+			"items": {
+				"appleMusicHeader": { "type": "header", "size": 2, "text": "Apple Music" },
+				"appleMusicPlaceholder": {
+					"type": "infoBox",
+					"text": "Apple Music is planned as a separate content service for authorization, catalog, library, playlists, recommendations, and search. No credentials or runtime objects are created yet.",
+					"boxType": "info"
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,173 @@
+{
+	"common": {
+		"name": "apple",
+		"version": "0.2.0",
+		"news": {
+			"0.2.0": {
+				"en": "BREAKING: Refined the Apple device-class tree, separated remote, playback, and power controls, centralized command results, and added HomePod and AirPlay receiver discovery counts",
+				"de": "BREAKING: Apple-Geräteklassenbaum überarbeitet, Remote-, Wiedergabe- und Power-Steuerung getrennt, Befehlsergebnisse zentralisiert und Discovery-Zähler für HomePod und AirPlay Receiver ergänzt",
+				"ru": "BREAKING: Обновлено дерево классов устройств Apple, разделены элементы управления пультом, воспроизведением и питанием, централизованы результаты команд и добавлены счетчики HomePod и AirPlay",
+				"pt": "BREAKING: Árvore de classes de dispositivos Apple revisada, controles remoto, de reprodução e energia separados, resultados de comandos centralizados e contagens de HomePod e AirPlay adicionadas",
+				"nl": "BREAKING: Apple-apparaatklassenboom herzien, bediening voor afstandsbediening, afspelen en voeding gescheiden, opdrachtresultaten gecentraliseerd en tellingen voor HomePod en AirPlay toegevoegd",
+				"fr": "BREAKING: Arborescence des classes d’appareils Apple révisée, commandes de télécommande, lecture et alimentation séparées, résultats centralisés et compteurs HomePod/AirPlay ajoutés",
+				"it": "BREAKING: Struttura delle classi Apple rivista, controlli remoto, riproduzione e alimentazione separati, risultati dei comandi centralizzati e conteggi HomePod/AirPlay aggiunti",
+				"es": "BREAKING: Árbol de clases Apple revisado, controles remoto, de reproducción y encendido separados, resultados de comandos centralizados y contadores de HomePod/AirPlay añadidos",
+				"pl": "BREAKING: Zmieniono drzewo klas urządzeń Apple, rozdzielono sterowanie pilotem, odtwarzaniem i zasilaniem, scentralizowano wyniki poleceń oraz dodano liczniki HomePod/AirPlay",
+				"uk": "BREAKING: Оновлено дерево класів пристроїв Apple, розділено керування пультом, відтворенням і живленням, централізовано результати команд і додано лічильники HomePod/AirPlay",
+				"zh-cn": "BREAKING：重构 Apple 设备类别树，分离遥控、播放和电源控制，集中命令结果，并新增 HomePod 与 AirPlay 接收器发现计数"
+			},
+			"0.1.0": {
+				"en": "Initial Apple TV discovery, secure pairing, status, and remote control",
+				"de": "Erste Apple-TV-Erkennung, sichere Kopplung, Status und Fernbedienung",
+				"ru": "Начальная версия",
+				"pt": "lançamento inicial",
+				"nl": "Eerste uitgave",
+				"fr": "Première version",
+				"it": "Versione iniziale",
+				"es": "Versión inicial",
+				"pl": "Pierwsze wydanie",
+				"uk": "Початкова версія",
+				"zh-cn": "首次出版"
+			}
+		},
+		"titleLang": {
+			"en": "Apple",
+			"de": "Apple",
+			"ru": "Apple",
+			"pt": "Apple",
+			"nl": "Apple",
+			"fr": "Apple",
+			"it": "Apple",
+			"es": "Apple",
+			"pl": "Apple",
+			"uk": "Apple",
+			"zh-cn": "Apple"
+		},
+		"desc": {
+			"en": "Discover and control Apple media devices on the local network",
+			"de": "Entdecken und steuern Sie Apple-Mediengeräte im lokalen Netzwerk",
+			"ru": "Обнаружение и управление мультимедийными устройствами Apple в локальной сети",
+			"pt": "Descubra e controle dispositivos de mídia Apple na rede local",
+			"nl": "Ontdek en beheer Apple-media-apparaten op het lokale netwerk",
+			"fr": "Découvrez et contrôlez les appareils multimédia Apple sur le réseau local",
+			"it": "Scopri e controlla i dispositivi multimediali Apple sulla rete locale",
+			"es": "Descubra y controle dispositivos multimedia Apple en la red local",
+			"pl": "Odkrywaj i kontroluj urządzenia multimedialne Apple w sieci lokalnej",
+			"uk": "Знаходьте та керуйте медіапристроями Apple у локальній мережі",
+			"zh-cn": "发现并控制本地网络上的 Apple 媒体设备"
+		},
+		"authors": ["C@ptain Ch@os <223081183+Musashi1965@users.noreply.github.com>"],
+		"keywords": ["apple", "apple tv", "homepod", "airplay"],
+		"licenseInformation": {
+			"type": "free",
+			"license": "MIT"
+		},
+		"platform": "Javascript/Node.js",
+		"icon": "apple.png",
+		"enabled": true,
+		"extIcon": "https://raw.githubusercontent.com/Musashi1965/ioBroker.apple/main/admin/apple.png",
+		"readme": "https://github.com/Musashi1965/ioBroker.apple/blob/main/README.md",
+		"loglevel": "info",
+		"tier": 3,
+		"mode": "daemon",
+		"type": "multimedia",
+		"compact": true,
+		"messagebox": true,
+		"connectionType": "local",
+		"dataSource": "push",
+		"adminUI": {
+			"config": "json"
+		},
+		"dependencies": [
+			{
+				"js-controller": ">=7.2.2"
+			}
+		],
+		"globalDependencies": [
+			{
+				"admin": ">=8.0.0 <9.0.0"
+			}
+		]
+	},
+	"native": {
+		"discoveryInterval": 60,
+		"interfaceLanguage": ""
+	},
+	"objects": [],
+	"instanceObjects": [
+		{
+			"_id": "info",
+			"type": "channel",
+			"common": {
+				"name": "Information"
+			},
+			"native": {}
+		},
+		{
+			"_id": "info.connection",
+			"type": "state",
+			"common": {
+				"role": "indicator.connected",
+				"name": "Device connected",
+				"type": "boolean",
+				"read": true,
+				"write": false,
+				"def": false
+			},
+			"native": {}
+		},
+		{
+			"_id": "info.discoveryRunning",
+			"type": "state",
+			"common": {
+				"role": "indicator.working",
+				"name": "Discovery running",
+				"type": "boolean",
+				"read": true,
+				"write": false,
+				"def": false
+			},
+			"native": {}
+		},
+		{
+			"_id": "info.lastDiscovery",
+			"type": "state",
+			"common": {
+				"role": "value.time",
+				"name": "Last discovery",
+				"type": "number",
+				"read": true,
+				"write": false,
+				"def": 0
+			},
+			"native": {}
+		},
+		{
+			"_id": "info.deviceCount",
+			"type": "state",
+			"common": {
+				"role": "value",
+				"name": "Discovered device count",
+				"type": "number",
+				"read": true,
+				"write": false,
+				"min": 0,
+				"def": 0
+			},
+			"native": {}
+		},
+		{
+			"_id": "info.lastError",
+			"type": "state",
+			"common": {
+				"role": "text",
+				"name": "Last adapter error",
+				"type": "string",
+				"read": true,
+				"write": false,
+				"def": ""
+			},
+			"native": {}
+		}
+	]
+}

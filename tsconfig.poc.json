@@ -1,0 +1,16 @@
+{
+	"extends": "./tsconfig.json",
+	"compilerOptions": {
+		"allowJs": false,
+		"checkJs": false,
+		"declaration": false,
+		"module": "Node16",
+		"moduleResolution": "Node16",
+		"noEmit": false,
+		"outDir": "./.poc-build",
+		"rootDir": "./poc",
+		"sourceMap": false
+	},
+	"include": ["poc/**/*.cts"],
+	"exclude": ["build/**", "node_modules/**"]
+}
