@@ -1,6 +1,6 @@
 {
   "name": "iobroker.apple",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Discover and control Apple media devices on the local network",
   "author": {
     "name": "C@ptain Ch@os",
@@ -18,7 +18,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git@github.com:Musashi1965/ioBroker.apple.git"
+    "url": "https://github.com/Musashi1965/ioBroker.apple.git"
   },
   "engines": {
     "node": ">= 22"

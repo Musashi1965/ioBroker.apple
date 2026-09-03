@@ -1,8 +1,21 @@
 {
 	"common": {
 		"name": "apple",
-		"version": "0.3.1",
+		"version": "0.3.2",
 		"news": {
+			"0.3.2": {
+				"en": "Correct release metadata for ioBroker latest repository submission",
+				"de": "Release-Metadaten für die Einreichung im ioBroker-latest-Repository korrigiert",
+				"ru": "Исправлены метаданные релиза для отправки в репозиторий ioBroker latest",
+				"pt": "Corrige metadados de release para submissão ao repositório latest do ioBroker",
+				"nl": "Corrigeert releasemetadata voor indiening bij de ioBroker latest-repository",
+				"fr": "Corrige les métadonnées de release pour la soumission au dépôt latest ioBroker",
+				"it": "Corregge i metadati di release per l'invio al repository latest di ioBroker",
+				"es": "Corrige metadatos de release para el envío al repositorio latest de ioBroker",
+				"pl": "Poprawia metadane wydania na potrzeby zgłoszenia do repozytorium latest ioBroker",
+				"uk": "Виправлено метадані релізу для подання до репозиторію ioBroker latest",
+				"zh-cn": "修正用于提交到 ioBroker latest 仓库的发布元数据"
+			},
 			"0.3.1": {
 				"en": "Fix Windows release test compatibility for managed-device persistence",
 				"de": "Windows-Kompatibilität des Release-Tests für die Managed-Device-Persistenz korrigiert",

@@ -3,7 +3,7 @@
 <img src="admin/apple-logo.png" alt="ioBroker Apple adapter logo" width="128">
 
 `iobroker.apple` discovers and controls supported Apple media devices in the
-local network. Version 0.2 is the current development baseline. It contains an
+local network. Version 0.3 is the current development baseline. It contains an
 Apple TV vertical slice and a conservative HomePod preview for public hardware
 testing. Its object contracts are designed for ioBroker automations and
 visualizations without exposing Apple protocol details.
@@ -42,8 +42,8 @@ current scope.
 
 ## Open Points / Next Steps
 
-The following work remains between the current version 0.2 vertical slice and
-the intended first stable adapter release:
+The following work remains between the current version 0.3 development baseline
+and the intended first stable adapter release:
 
 - **Complete Apple TV control:** add capability-gated seek/skip, writable
   volume, artwork, account selection, and audio-output discovery and selection.
@@ -218,9 +218,11 @@ pre-1.0 compatibility and migration policy, are documented in
 
 ## Changelog
 
-### **WORK IN PROGRESS**
-
 No unreleased changes.
+
+### 0.3.2 - 2026-09-03
+
+- Correct release metadata for ioBroker latest repository submission.
 
 ### 0.3.1 - 2026-09-03
 
