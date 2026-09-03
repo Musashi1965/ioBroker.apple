@@ -32,6 +32,7 @@
 					"sm": 9,
 					"md": 9,
 					"lg": 9,
+					"xl": 9,
 					"label": "Discovery interval",
 					"help": "How often supported Apple devices are rediscovered and unavailable active devices are retried.",
 					"min": 30,
@@ -61,7 +62,12 @@
 				"appleTvDiscoveryOverview": {
 					"type": "textSendTo",
 					"label": "Detected Apple TVs",
-					"command": "getAppleTvDiscoveryOverview"
+					"command": "getAppleTvDiscoveryOverview",
+					"xs": 12,
+					"sm": 12,
+					"md": 12,
+					"lg": 12,
+					"xl": 12
 				},
 				"appleTvDiscoveryHint": {
 					"type": "infoBox",
@@ -85,7 +91,12 @@
 				"homePodDiscoveryOverview": {
 					"type": "textSendTo",
 					"label": "Detected HomePods",
-					"command": "getHomePodDiscoveryOverview"
+					"command": "getHomePodDiscoveryOverview",
+					"xs": 12,
+					"sm": 12,
+					"md": 12,
+					"lg": 12,
+					"xl": 12
 				},
 				"homePodManagement": {
 					"type": "custom",
@@ -104,7 +115,12 @@
 				"airPlayReceiverDiscoveryOverview": {
 					"type": "textSendTo",
 					"label": "Detected AirPlay receivers",
-					"command": "getAirPlayReceiverDiscoveryOverview"
+					"command": "getAirPlayReceiverDiscoveryOverview",
+					"xs": 12,
+					"sm": 12,
+					"md": 12,
+					"lg": 12,
+					"xl": 12
 				},
 				"airPlayReceiverManagement": {
 					"type": "custom",

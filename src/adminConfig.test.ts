@@ -13,6 +13,11 @@ interface ConfigItem {
 	url?: string;
 	name?: string;
 	guiApi?: number;
+	xs?: number;
+	sm?: number;
+	md?: number;
+	lg?: number;
+	xl?: number;
 	style?: { width?: number; height?: number };
 	items?: Record<string, ConfigItem>;
 }
@@ -31,7 +36,14 @@ describe('Admin JSON configuration', () => {
 		const config = JSON.parse(await readFile(resolve('admin/jsonConfig.json'), 'utf8')) as ConfigItem;
 		const general = config.items?.general?.items;
 		expect(general?.adapterLogo?.style).to.deep.include({ width: 128, height: 128 });
-		expect(general?.discoveryInterval?.type).to.equal('number');
+		expect(general?.discoveryInterval).to.deep.include({
+			type: 'number',
+			xs: 12,
+			sm: 9,
+			md: 9,
+			lg: 9,
+			xl: 9,
+		});
 		expect(general?.interfaceLanguage).to.deep.include({
 			type: 'custom',
 			name: 'AppleAdminComponents/Components/InterfaceLanguageSelector',
@@ -49,6 +61,13 @@ describe('Admin JSON configuration', () => {
 		);
 		expect(devices?.homePodDiscoveryOverview?.command).to.equal('getHomePodDiscoveryOverview');
 		expect(devices?.airPlayReceiverDiscoveryOverview?.command).to.equal('getAirPlayReceiverDiscoveryOverview');
+		for (const summary of [
+			devices?.appleTvDiscoveryOverview,
+			devices?.homePodDiscoveryOverview,
+			devices?.airPlayReceiverDiscoveryOverview,
+		]) {
+			expect(summary).to.deep.include({ xs: 12, sm: 12, md: 12, lg: 12, xl: 12 });
+		}
 		expect(devices?.appleTvManagement).to.deep.include({
 			type: 'custom',
 			url: 'custom/customComponents.js',
@@ -70,6 +89,24 @@ describe('Admin JSON configuration', () => {
 		expect(
 			Object.values(devices ?? {}).some(item => ['selectSendTo', 'sendTo'].includes(item.type ?? '')),
 		).to.equal(false);
+	});
+
+	it('provides a complete translation catalog for every supported Admin language', async () => {
+		const languages = ['de', 'es', 'fr', 'it', 'nl', 'pl', 'pt', 'ru', 'uk', 'zh-cn'];
+		const english = JSON.parse(await readFile(resolve('admin/i18n/en.json'), 'utf8')) as Record<string, string>;
+		const englishKeys = Object.keys(english).sort();
+
+		for (const language of languages) {
+			const translation = JSON.parse(await readFile(resolve(`admin/i18n/${language}.json`), 'utf8')) as Record<
+				string,
+				string
+			>;
+			expect(Object.keys(translation).sort(), language).to.deep.equal(englishKeys);
+			expect(
+				Object.values(translation).every(value => value.trim().length > 0),
+				language,
+			).to.equal(true);
+		}
 	});
 
 	it('ships the custom component source and generated entry point', async () => {
