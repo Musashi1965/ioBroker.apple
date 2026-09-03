@@ -86,7 +86,7 @@ first stable release.
 
 - Node.js 22 or newer;
 - js-controller 7.2.2 or newer;
-- Admin 8.x; Admin 7 is no longer supported because custom GUI-API generations
+- Admin 8 or newer; Admin 7 is no longer supported because custom GUI-API generations
   are not backward compatible;
 - Apple TV or HomePod and the ioBroker host on the same multicast-capable local
   network.

@@ -105,7 +105,7 @@ describe('Admin JSON configuration', () => {
 		const sharedVersions = Object.fromEntries(
 			(federationManifest.shared ?? []).map(dependency => [dependency.name, dependency.version]),
 		);
-		expect(ioPackage.common?.globalDependencies).to.deep.include({ admin: '>=8.0.0 <9.0.0' });
+		expect(ioPackage.common?.globalDependencies).to.deep.include({ admin: '>=8.0.0' });
 		expect(packageJson.devDependencies?.['@iobroker/gui-components']).to.equal('10.0.5');
 		expect(packageJson.devDependencies).not.to.have.property('@iobroker/adapter-react-v5');
 		expect(sharedVersions['@iobroker/gui-components']).to.equal('10.0.5');

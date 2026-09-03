@@ -57,7 +57,7 @@
 			"zh-cn": "发现并控制本地网络上的 Apple 媒体设备"
 		},
 		"authors": ["C@ptain Ch@os <223081183+Musashi1965@users.noreply.github.com>"],
-		"keywords": ["apple", "apple tv", "homepod", "airplay"],
+		"keywords": ["ioBroker", "apple", "apple tv", "homepod", "airplay"],
 		"licenseInformation": {
 			"type": "free",
 			"license": "MIT"
@@ -85,7 +85,7 @@
 		],
 		"globalDependencies": [
 			{
-				"admin": ">=8.0.0 <9.0.0"
+				"admin": ">=8.0.0"
 			}
 		]
 	},

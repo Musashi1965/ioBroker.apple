@@ -30,7 +30,7 @@ imports `I18n` and the Module Federation sharing configuration from
 their base implementation. The deprecated `bundlerType` declaration and the
 generation-1 `@iobroker/adapter-react-v5` dependency are removed.
 
-The adapter requires ioBroker Admin `>=8.0.0 <9.0.0`. Admin 7 is no longer a
+The adapter requires ioBroker Admin `>=8.0.0`. Admin 7 is no longer a
 supported installation target. This incompatibility must be announced as
 `BREAKING` in the next pre-1.0 minor release; the current development version
 is not changed outside an explicitly authorized release.
