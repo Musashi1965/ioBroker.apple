@@ -1,3 +1,6 @@
+# Dependabot configuration
+# Cooldown delays updating normal npm dependencies by 7 days but allows
+# security updates to be processed immediately.
 version: 2
 updates:
     - package-ecosystem: npm
@@ -8,8 +11,7 @@ updates:
           timezone: Europe/Berlin
       cooldown:
           default-days: 7
-      # Routine npm updates resume after the initial public release.
-      open-pull-requests-limit: 0
+      open-pull-requests-limit: 15
       assignees:
           - Musashi1965
       versioning-strategy: increase

@@ -1,0 +1,12 @@
+# Auto-merge configuration for Dependabot PRs.
+#
+# Patch updates for production dependencies and patch/minor updates for
+# development dependencies may be merged automatically after the normal checks
+# pass. Major updates still require manual review.
+
+- match:
+      dependency_type: production
+      update_type: 'semver:patch'
+- match:
+      dependency_type: development
+      update_type: 'semver:minor'
