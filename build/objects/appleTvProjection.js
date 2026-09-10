@@ -36,6 +36,7 @@ class AppleTvProjection {
   /** Reconciles instance objects and safe startup defaults. */
   async initialize() {
     await this.reconcile((0, import_objectDefinitions.instanceObjectDefinitions)());
+    await this.reconcileKnownDeviceMetadata();
     await this.markAirPlayReceiversUnavailable(/* @__PURE__ */ new Set());
     await this.markHomePodsUnavailable(/* @__PURE__ */ new Set());
     await Promise.all([
@@ -722,6 +723,68 @@ class AppleTvProjection {
       await this.adapter.delObjectAsync(root, { recursive: true });
     }
   }
+  /** Repairs checker-relevant metadata for retained adapter-owned device roots during startup. */
+  async reconcileKnownDeviceMetadata() {
+    const definitions = [];
+    const knownRoots = await this.knownDeviceRoots();
+    for (const root of knownRoots.appletv) {
+      definitions.push(
+        stateMetadata(`${root}.info.type`, { type: "string", role: "text", read: true, write: false }),
+        stateMetadata(`${root}.volume.level`, {
+          type: "number",
+          role: "value",
+          read: true,
+          write: false,
+          min: 0,
+          max: 100,
+          unit: "%"
+        })
+      );
+    }
+    for (const root of knownRoots.homepod) {
+      definitions.push(
+        stateMetadata(`${root}.info.type`, { type: "string", role: "text", read: true, write: false }),
+        stateMetadata(`${root}.volume.level`, {
+          type: "number",
+          role: "value",
+          read: true,
+          write: false,
+          min: 0,
+          max: 100,
+          unit: "%"
+        })
+      );
+    }
+    for (const root of knownRoots.airplayReceiver) {
+      definitions.push(
+        stateMetadata(`${root}.info.type`, { type: "string", role: "text", read: true, write: false })
+      );
+    }
+    await this.reconcile(definitions);
+  }
+  /** Finds existing adapter-owned device roots without deleting or creating device inventories. */
+  async knownDeviceRoots() {
+    const result = {
+      appletv: /* @__PURE__ */ new Set(),
+      homepod: /* @__PURE__ */ new Set(),
+      airplayReceiver: /* @__PURE__ */ new Set()
+    };
+    const relativePrefix = "devices.";
+    const absolutePrefix = `${this.adapter.namespace}.${relativePrefix}`;
+    const objects = await this.adapter.getObjectListAsync({
+      startkey: absolutePrefix,
+      endkey: `${absolutePrefix}\u9999`
+    });
+    for (const row of objects.rows) {
+      const relativeId = row.id.slice(`${this.adapter.namespace}.`.length);
+      const match = /^(devices\.(appletv|homepod|airplayReceiver)\.[0-9a-f]{12})(?:\.|$)/.exec(relativeId);
+      if ((match == null ? void 0 : match[1]) === void 0 || match[2] === void 0) {
+        continue;
+      }
+      result[match[2]].add(match[1]);
+    }
+    return result;
+  }
   /**
    * Reconciles object fragments idempotently.
    *
@@ -744,6 +807,16 @@ class AppleTvProjection {
 }
 function appCommandName(action) {
   return action === "refresh" ? "refreshApps" : action === "launch" ? "launchApp" : "openUrl";
+}
+function stateMetadata(id, common) {
+  return {
+    id,
+    object: {
+      type: "state",
+      common,
+      native: {}
+    }
+  };
 }
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
