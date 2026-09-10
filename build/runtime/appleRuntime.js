@@ -23,6 +23,7 @@ __export(appleRuntime_exports, {
   parseAppWrite: () => parseAppWrite,
   parseAppleTvCommandStateId: () => parseAppleTvCommandStateId,
   parseAppleTvCommandWrite: () => parseAppleTvCommandWrite,
+  parseAppleTvVolumeWrite: () => parseAppleTvVolumeWrite,
   parseHomePodWrite: () => parseHomePodWrite
 });
 module.exports = __toCommonJS(appleRuntime_exports);
@@ -399,6 +400,26 @@ class AppleRuntime {
     return execution;
   }
   /**
+   * Applies one validated absolute Apple TV volume level.
+   *
+   * @param deviceId - Stable normalized Apple TV identifier.
+   * @param percent - Desired volume from 0 through 100.
+   */
+  async setAppleTvVolume(deviceId, percent) {
+    const normalized = normalizeDeviceId(deviceId);
+    if (!Number.isFinite(percent) || percent < 0 || percent > 100) {
+      throw new import_appleTvBackend.AppleTvBackendError("unsupported");
+    }
+    const device = this.devices.get(normalized);
+    if (device === void 0) {
+      await this.projectCommandError(normalized, "setVolume", "not_discovered", 0);
+      throw new import_appleTvBackend.AppleTvBackendError("not_discovered");
+    }
+    const execution = device.commandQueue.then(() => this.performAppleTvVolume(device, normalized, percent));
+    device.commandQueue = execution.catch(() => void 0);
+    return execution;
+  }
+  /**
    * Executes one capability-gated HomePod transport command in target order.
    *
    * @param deviceId - Stable normalized HomePod identifier.
@@ -624,6 +645,28 @@ class AppleRuntime {
     }
   }
   /**
+   * Executes and projects one Apple TV absolute volume command within its per-target queue.
+   *
+   * @param device - Target runtime record.
+   * @param deviceId - Stable normalized target ID.
+   * @param percent - Desired volume from 0 through 100.
+   */
+  async performAppleTvVolume(device, deviceId, percent) {
+    await this.projection.commandStarted(deviceId, "setVolume");
+    try {
+      this.requirePairing(deviceId);
+      if (!device.status.online) {
+        throw new import_appleTvBackend.AppleTvBackendError("not_connected");
+      }
+      await device.backend.setVolume(percent);
+      await this.projection.commandResult(deviceId, "setVolume", "success", "", percent);
+    } catch (error) {
+      const code = runtimeErrorCode(error);
+      await this.projection.commandResult(deviceId, "setVolume", "error", code, device.snapshot.volume);
+      throw new import_appleTvBackend.AppleTvBackendError(code);
+    }
+  }
+  /**
    * Fetches, validates, and projects one app catalog refresh.
    *
    * @param device - Target runtime record.
@@ -710,10 +753,11 @@ class AppleRuntime {
    * @param deviceId - Stable normalized target ID.
    * @param command - Rejected remote command.
    * @param code - Stable public error code.
+   * @param acknowledgedValue - Safe scalar used to clear an unacknowledged non-button write.
    */
-  async projectCommandError(deviceId, command, code) {
+  async projectCommandError(deviceId, command, code, acknowledgedValue) {
     await this.projection.commandStarted(deviceId, command);
-    await this.projection.commandResult(deviceId, command, "error", code);
+    await this.projection.commandResult(deviceId, command, "error", code, acknowledgedValue);
   }
   /**
    * Projects an app command failure when no active device queue is available.
@@ -932,6 +976,7 @@ class AppleRuntime {
         if (current === void 0) {
           return;
         }
+        current.snapshot = snapshot;
         current.appsCapable = snapshot.capabilities.apps;
         this.enqueueProjection(() => this.projection.snapshot(target.deviceId, snapshot));
         this.tryAutomaticAppRefresh(target.deviceId);
@@ -964,7 +1009,29 @@ class AppleRuntime {
       },
       backend,
       commandQueue: Promise.resolve(),
-      appsCapable: false
+      appsCapable: false,
+      snapshot: {
+        powerState: "unknown",
+        title: "",
+        artist: "",
+        album: "",
+        app: "",
+        appBundleId: "",
+        duration: 0,
+        position: 0,
+        isPlaying: false,
+        volumeAvailable: false,
+        volume: 0,
+        muted: false,
+        capabilities: {
+          remote: false,
+          playback: false,
+          power: false,
+          nowPlaying: false,
+          volume: false,
+          apps: false
+        }
+      }
     };
     this.devices.set(target.deviceId, device);
     this.connectionStates.set(target.deviceId, device.status);
@@ -1142,6 +1209,16 @@ function parseAppleTvCommandWrite(id, state) {
   }
   return parseAppleTvCommandStateId(id);
 }
+function parseAppleTvVolumeWrite(id, state) {
+  if (state === null || state === void 0 || state.ack) {
+    return void 0;
+  }
+  const match = /(?:^|\.)devices\.appletv\.([0-9a-f]{12})\.volume\.level$/.exec(id);
+  if (match === null) {
+    return void 0;
+  }
+  return typeof state.val === "number" && Number.isFinite(state.val) && state.val >= 0 && state.val <= 100 ? { deviceId: match[1].toUpperCase(), percent: state.val } : void 0;
+}
 function parseHomePodWrite(id, state) {
   if (state === null || state === void 0 || state.ack) {
     return void 0;
@@ -1278,6 +1355,7 @@ class DefaultManagedDeviceStore {
   parseAppWrite,
   parseAppleTvCommandStateId,
   parseAppleTvCommandWrite,
+  parseAppleTvVolumeWrite,
   parseHomePodWrite
 });
 //# sourceMappingURL=appleRuntime.js.map

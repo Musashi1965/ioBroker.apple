@@ -91,7 +91,7 @@ function instanceObjectDefinitions() {
     )
   ];
 }
-function appleTvObjectDefinitions(target, remoteAvailable, powerAvailable = false, playbackAvailable = remoteAvailable) {
+function appleTvObjectDefinitions(target, remoteAvailable, powerAvailable = false, playbackAvailable = remoteAvailable, volumeAvailable = false) {
   const root = deviceObjectId(target.deviceId);
   const definitions = [
     {
@@ -104,7 +104,7 @@ function appleTvObjectDefinitions(target, remoteAvailable, powerAvailable = fals
     },
     channel(`${root}.info`, "Information"),
     state(`${root}.info.name`, "Display name", stringCommon("info.name", "")),
-    state(`${root}.info.type`, "Device type", stringCommon("info.type", "appletv")),
+    state(`${root}.info.type`, "Device type", stringCommon("text", "appletv")),
     state(`${root}.info.model`, "Hardware model", stringCommon("info.hardware", "")),
     state(`${root}.info.paired`, "Paired", booleanCommon("indicator", false)),
     state(`${root}.info.lastSeen`, "Last seen", numberCommon("value.time", 0)),
@@ -135,7 +135,7 @@ function appleTvObjectDefinitions(target, remoteAvailable, powerAvailable = fals
     state(`${root}.nowPlaying.isPlaying`, "Playing", booleanCommon("media.state", false)),
     channel(`${root}.volume`, "Volume"),
     state(`${root}.volume.available`, "Volume available", booleanCommon("indicator", false)),
-    state(`${root}.volume.level`, "Volume", numberCommon("level.volume", 0, { min: 0, max: 100, unit: "%" })),
+    state(`${root}.volume.level`, "Volume", appleTvVolumeCommon(volumeAvailable)),
     state(`${root}.volume.muted`, "Muted", booleanCommon("media.mute", false)),
     channel(`${root}.apps`, "Apps"),
     state(`${root}.apps.count`, "Launchable app count", numberCommon("value", 0, { min: 0 })),
@@ -151,9 +151,15 @@ function appleTvObjectDefinitions(target, remoteAvailable, powerAvailable = fals
     state(`${root}.lastCommand.error`, "Command error", stringCommon("text", "")),
     state(`${root}.lastCommand.completedAt`, "Command completed at", numberCommon("value.time", 0))
   ];
-  if (remoteAvailable || playbackAvailable || powerAvailable) {
+  if (remoteAvailable || playbackAvailable || powerAvailable || volumeAvailable) {
     definitions.push(
-      ...appleTvControlObjectDefinitions(target.deviceId, remoteAvailable, playbackAvailable, powerAvailable)
+      ...appleTvControlObjectDefinitions(
+        target.deviceId,
+        remoteAvailable,
+        playbackAvailable,
+        powerAvailable,
+        volumeAvailable
+      )
     );
   }
   return definitions;
@@ -171,7 +177,7 @@ function airPlayReceiverObjectDefinitions(target) {
     },
     channel(`${root}.info`, "Information"),
     state(`${root}.info.name`, "Display name", stringCommon("info.name", "")),
-    state(`${root}.info.type`, "Device type", stringCommon("info.type", "airplayReceiver")),
+    state(`${root}.info.type`, "Device type", stringCommon("text", "airplayReceiver")),
     state(`${root}.info.model`, "Hardware model", stringCommon("info.hardware", "")),
     state(`${root}.info.deviceId`, "Stable protocol device ID", stringCommon("text", "")),
     state(`${root}.info.lastSeen`, "Last seen", numberCommon("value.time", 0)),
@@ -195,7 +201,7 @@ function homePodObjectDefinitions(target) {
     },
     channel(`${root}.info`, "Information"),
     state(`${root}.info.name`, "Display name", stringCommon("info.name", "")),
-    state(`${root}.info.type`, "Device type", stringCommon("info.type", "homepod")),
+    state(`${root}.info.type`, "Device type", stringCommon("text", "homepod")),
     state(`${root}.info.model`, "Hardware model", stringCommon("info.hardware", "")),
     state(`${root}.info.deviceId`, "Stable protocol device ID", stringCommon("text", "")),
     state(`${root}.info.lastSeen`, "Last seen", numberCommon("value.time", 0)),
@@ -224,7 +230,7 @@ function homePodObjectDefinitions(target) {
     state(`${root}.nowPlaying.isPlaying`, "Playing", booleanCommon("media.state", false)),
     channel(`${root}.volume`, "Volume"),
     state(`${root}.volume.available`, "Volume available", booleanCommon("indicator", false)),
-    state(`${root}.volume.level`, "Volume", numberCommon("level.volume", 0, { min: 0, max: 100, unit: "%" })),
+    state(`${root}.volume.level`, "Volume", numberCommon("value.volume", 0, { min: 0, max: 100, unit: "%" })),
     state(`${root}.volume.muted`, "Muted", booleanCommon("media.mute", false)),
     channel(`${root}.lastCommand`, "Last command"),
     state(`${root}.lastCommand.name`, "Command name", stringCommon("text", "")),
@@ -253,7 +259,7 @@ function homePodControlObjectDefinitions(deviceId, playbackAvailable, volumeAvai
   definitions.push(
     state(`${root}.volume.level`, "Volume", {
       type: "number",
-      role: "level.volume",
+      role: volumeAvailable ? "level.volume" : "value.volume",
       read: true,
       write: volumeAvailable,
       def: 0,
@@ -345,7 +351,7 @@ function appEntryBaseKey(name) {
 function shortBundleIdHash(bundleId) {
   return (0, import_node_crypto.createHash)("sha256").update(bundleId).digest("hex").slice(0, 8);
 }
-function appleTvControlObjectDefinitions(deviceId, remoteAvailable = true, playbackAvailable = true, powerAvailable = false) {
+function appleTvControlObjectDefinitions(deviceId, remoteAvailable = true, playbackAvailable = true, powerAvailable = false, volumeAvailable = false) {
   const root = deviceObjectId(deviceId);
   const definitions = [];
   if (remoteAvailable) {
@@ -362,6 +368,9 @@ function appleTvControlObjectDefinitions(deviceId, remoteAvailable = true, playb
   }
   if (powerAvailable) {
     definitions.push(...commandButtons(root, "power", POWER_COMMANDS));
+  }
+  if (volumeAvailable) {
+    definitions.push(state(`${root}.volume.level`, "Volume", appleTvVolumeCommon(true)));
   }
   return definitions;
 }
@@ -419,6 +428,18 @@ function stringCommon(role, def) {
 }
 function numberCommon(role, def, metadata = {}) {
   return { type: "number", role, read: true, write: false, def, ...metadata };
+}
+function appleTvVolumeCommon(volumeAvailable) {
+  return {
+    type: "number",
+    role: volumeAvailable ? "level.volume" : "value.volume",
+    read: true,
+    write: volumeAvailable,
+    def: 0,
+    min: 0,
+    max: 100,
+    unit: "%"
+  };
 }
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {

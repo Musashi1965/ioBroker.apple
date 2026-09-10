@@ -72,6 +72,7 @@ class Apple extends utils.Adapter {
       await this.subscribeStatesAsync("devices.appletv.*.remote.*");
       await this.subscribeStatesAsync("devices.appletv.*.playback.*");
       await this.subscribeStatesAsync("devices.appletv.*.power.*");
+      await this.subscribeStatesAsync("devices.appletv.*.volume.*");
       await this.subscribeStatesAsync("devices.appletv.*.apps.*");
       await this.subscribeStatesAsync("devices.homepod.*.playback.*");
       await this.subscribeStatesAsync("devices.homepod.*.volume.*");
@@ -101,6 +102,14 @@ class Apple extends utils.Adapter {
       void this.runtime.executeRemote(command.deviceId, command.command).catch((error) => {
         const code = error instanceof import_appleTvBackend.AppleTvBackendError ? error.code : "protocol_error";
         this.log.warn(`Apple TV command failed: ${code}`);
+      });
+      return;
+    }
+    const appleTvVolume = (0, import_appleRuntime.parseAppleTvVolumeWrite)(id, state);
+    if (appleTvVolume !== void 0) {
+      void this.runtime.setAppleTvVolume(appleTvVolume.deviceId, appleTvVolume.percent).catch((error) => {
+        const code = error instanceof import_appleTvBackend.AppleTvBackendError ? error.code : "protocol_error";
+        this.log.warn(`Apple TV volume command failed: ${code}`);
       });
       return;
     }

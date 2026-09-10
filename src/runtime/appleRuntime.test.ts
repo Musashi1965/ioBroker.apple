@@ -22,6 +22,7 @@ import {
 	AppleRuntime,
 	parseAppleTvCommandStateId,
 	parseAppleTvCommandWrite,
+	parseAppleTvVolumeWrite,
 	parseAppWrite,
 	parseHomePodWrite,
 	type AppleTvBackendFactory,
@@ -451,6 +452,18 @@ describe('AppleRuntime', () => {
 		expect(
 			parseAppleTvCommandWrite('devices.appletv.020000000001.remote.select', { ack: false, val: false }),
 		).to.equal(undefined);
+		expect(
+			parseAppleTvVolumeWrite('devices.appletv.020000000001.volume.level', { ack: false, val: 42 }),
+		).to.deep.equal({
+			deviceId: '020000000001',
+			percent: 42,
+		});
+		expect(parseAppleTvVolumeWrite('devices.appletv.020000000001.volume.level', { ack: true, val: 42 })).to.equal(
+			undefined,
+		);
+		expect(parseAppleTvVolumeWrite('devices.appletv.020000000001.volume.level', { ack: false, val: 101 })).to.equal(
+			undefined,
+		);
 	});
 
 	it('serializes concurrent commands per target', async () => {
@@ -477,6 +490,39 @@ describe('AppleRuntime', () => {
 		expect(backend.commands).to.deep.equal(['up', 'down']);
 		backend.release();
 		await Promise.all([first, second]);
+		await runtime.stop();
+	});
+
+	it('executes Apple TV volume writes through the per-target command queue', async () => {
+		const target = discoveredTarget();
+		const projection = new ProjectionFake();
+		const backend = new BackendFake();
+		const runtime = new AppleRuntime(
+			projection,
+			new CredentialStoreFake(credentials()),
+			{ info: () => undefined, warn: () => undefined, debug: () => undefined },
+			60_000,
+			testTimerScheduler,
+			new DiscoveryFake([target]),
+			new PairingFake(),
+			backend.factory,
+		);
+
+		await runtime.start();
+		backend.emitSnapshot({
+			...emptyAppleTvSnapshot(),
+			volume: 50,
+			capabilities: { ...emptyAppleTvSnapshot().capabilities, volume: true },
+		});
+		await runtime.setAppleTvVolume(target.deviceId, 35);
+
+		expect(backend.volumeValues).to.deep.equal([35]);
+		expect(projection.volumeCommandResults.at(-1)).to.deep.equal({
+			command: 'setVolume',
+			status: 'success',
+			error: '',
+			acknowledgedValue: 35,
+		});
 		await runtime.stop();
 	});
 
@@ -632,6 +678,7 @@ class ProjectionFake {
 	public connectionCalls: AppleTvConnectionStatus[] = [];
 	public snapshotCount = 0;
 	public commandResults: { command: string; status: string; error?: string }[] = [];
+	public volumeCommandResults: { command: string; status: string; error?: string; acknowledgedValue?: number }[] = [];
 	public appCount = 0;
 	public appCommandResults: { action: string; status: string; error?: string }[] = [];
 	public removedDeviceIds: string[] = [];
@@ -722,8 +769,10 @@ class ProjectionFake {
 		command: string,
 		status: 'success' | 'error',
 		error?: string,
+		acknowledgedValue?: number,
 	): Promise<void> {
 		this.commandResults.push({ command, status, error });
+		this.volumeCommandResults.push({ command, status, error, acknowledgedValue });
 		return Promise.resolve();
 	}
 	public aggregate(_deviceCounts: AppleDeviceCounts, _connected: boolean, _error?: string): Promise<void> {
@@ -995,6 +1044,7 @@ class BackendFake {
 	public connectCount = 0;
 	public disconnectCount = 0;
 	public commands: AppleTvRemoteCommand[] = [];
+	public volumeValues: number[] = [];
 	public launchedApps: string[] = [];
 	public openedUrls: string[] = [];
 	private callbacks: Parameters<AppleTvBackendFactory>[1] | undefined;
@@ -1022,6 +1072,10 @@ class BackendFake {
 				this.commands.push(command);
 				return Promise.resolve();
 			},
+			setVolume: percent => {
+				this.volumeValues.push(percent);
+				return Promise.resolve();
+			},
 			listApps: () =>
 				Promise.resolve([
 					{ bundleId: 'com.example.First', name: 'First' },
@@ -1044,6 +1098,10 @@ class BackendFake {
 
 	public emitConnection(status: AppleTvConnectionStatus): void {
 		this.callbacks?.onConnection(status);
+	}
+
+	public emitSnapshot(snapshot: AppleTvSnapshot): void {
+		this.callbacks?.onSnapshot(snapshot);
 	}
 }
 
@@ -1106,6 +1164,7 @@ class BlockingBackendFake {
 			this.commands.push(command);
 			return new Promise<void>(resolve => this.releases.push(resolve));
 		},
+		setVolume: () => Promise.resolve(),
 		listApps: () => Promise.resolve([]),
 		launchApp: () => Promise.resolve(),
 		openUrl: () => Promise.resolve(),

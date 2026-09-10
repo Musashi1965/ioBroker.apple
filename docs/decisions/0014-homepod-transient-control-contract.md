@@ -44,7 +44,7 @@ The initial per-device read-only state contract is:
 | State suffix              | Type    | Role                  | Meaning                                      |
 | ------------------------- | ------- | --------------------- | -------------------------------------------- |
 | `info.name`               | string  | `info.name`           | Latest display name                          |
-| `info.type`               | string  | `info.type`           | Constant `homepod`                           |
+| `info.type`               | string  | `text`                | Constant `homepod`                           |
 | `info.model`              | string  | `info.hardware`       | Latest reported model                        |
 | `info.deviceId`           | string  | `text`                | Stable normalized protocol ID                |
 | `info.lastSeen`           | number  | `value.time`          | Last successful scan containing the HomePod  |
@@ -66,7 +66,7 @@ The initial per-device read-only state contract is:
 | `nowPlaying.position`     | number  | `value.interval`      | Position in seconds                          |
 | `nowPlaying.isPlaying`    | boolean | `media.state`         | Current playback flag                        |
 | `volume.available`        | boolean | `indicator`           | Current volume availability                  |
-| `volume.level`            | number  | `level.volume`        | Volume from 0 through 100                    |
+| `volume.level`            | number  | `value.volume` / `level.volume` | Volume from 0 through 100; writable only after volume capability |
 | `volume.muted`            | boolean | `media.mute`          | Current mute state                           |
 | `lastCommand.*`           | scalar  | existing result roles | Last accepted command and stable result      |
 

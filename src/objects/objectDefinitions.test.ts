@@ -60,6 +60,7 @@ describe('Apple object definitions', () => {
 		const withoutRemote = appleTvObjectDefinitions(target(), false);
 		const withNavigation = appleTvObjectDefinitions(target(), true);
 		const withPower = appleTvObjectDefinitions(target(), true, true);
+		const withVolume = appleTvObjectDefinitions(target(), false, false, false, true);
 
 		expect(deviceObjectId('02:00:00:00:00:01')).to.equal('devices.appletv.020000000001');
 		expect(withoutRemote.some(definition => definition.id.includes('.remote.'))).to.equal(false);
@@ -82,6 +83,10 @@ describe('Apple object definitions', () => {
 				write: true,
 			});
 		}
+		expect(withVolume.find(entry => entry.id.endsWith('.volume.level'))?.object.common).to.include({
+			role: 'level.volume',
+			write: true,
+		});
 	});
 
 	it('uses a readable device label without changing its technical identity', () => {
@@ -133,6 +138,7 @@ describe('Apple object definitions', () => {
 		});
 		expect(unavailable.some(entry => entry.id.includes('.playback.'))).to.equal(false);
 		expect(unavailable.find(entry => entry.id.endsWith('.volume.level'))?.object.common).to.include({
+			role: 'value.volume',
 			write: false,
 		});
 		for (const command of HOME_POD_PLAYBACK_COMMANDS) {
@@ -143,15 +149,21 @@ describe('Apple object definitions', () => {
 				write: true,
 			});
 		}
-		expect(available.find(entry => entry.id.endsWith('.volume.level'))?.object.common).to.include({ write: true });
+		expect(available.find(entry => entry.id.endsWith('.volume.level'))?.object.common).to.include({
+			role: 'level.volume',
+			write: true,
+		});
 		expect(available.find(entry => entry.id.endsWith('.volume.muted'))?.object.common).to.include({ write: true });
 		expect(homePodDisplayName(' HomePod Office ')).to.equal('HomePod Office');
 	});
 
 	it('defines normalized units and ranges', () => {
 		const definitions = appleTvObjectDefinitions(target(), false);
+		const deviceType = definitions.find(entry => entry.id.endsWith('.info.type'));
 		const volume = definitions.find(entry => entry.id.endsWith('.volume.level'));
 		const duration = definitions.find(entry => entry.id.endsWith('.nowPlaying.duration'));
+		expect(deviceType?.object.common).to.include({ role: 'text', read: true, write: false });
+		expect(volume?.object.common).to.include({ role: 'value.volume', read: true, write: false });
 		expect(volume?.object.common).to.include({ min: 0, max: 100, unit: '%' });
 		expect(duration?.object.common).to.include({ min: 0, unit: 's' });
 	});

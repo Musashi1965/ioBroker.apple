@@ -7,9 +7,9 @@ import type {
 import {
 	emptyAppleTvSnapshot,
 	type AppleTvApp,
+	type AppleTvCommand,
 	type AppleTvConnectionState,
 	type AppleTvConnectionStatus,
-	type AppleTvRemoteCommand,
 	type AppleTvSnapshot,
 } from '../domain/appleTv';
 import {
@@ -380,12 +380,18 @@ export class AppleTvProjection {
 	 */
 	public async snapshot(deviceId: string, snapshot: AppleTvSnapshot): Promise<void> {
 		const root = deviceObjectId(deviceId);
-		if (snapshot.capabilities.remote || snapshot.capabilities.playback || snapshot.capabilities.power) {
+		if (
+			snapshot.capabilities.remote ||
+			snapshot.capabilities.playback ||
+			snapshot.capabilities.power ||
+			snapshot.capabilities.volume
+		) {
 			await this.reconcileControls(
 				deviceId,
 				snapshot.capabilities.remote,
 				snapshot.capabilities.playback,
 				snapshot.capabilities.power,
+				snapshot.capabilities.volume,
 			);
 		}
 		if (snapshot.capabilities.apps) {
@@ -515,7 +521,7 @@ export class AppleTvProjection {
 	 * @param command - Public remote command name.
 	 * @param target - Optional non-secret command target.
 	 */
-	public async commandStarted(deviceId: string, command: AppleTvRemoteCommand, target = ''): Promise<void> {
+	public async commandStarted(deviceId: string, command: AppleTvCommand, target = ''): Promise<void> {
 		const root = deviceObjectId(deviceId);
 		await Promise.all([
 			this.write(`${root}.lastCommand.name`, command),
@@ -533,21 +539,28 @@ export class AppleTvProjection {
 	 * @param command - Public remote command name.
 	 * @param status - Stable result status.
 	 * @param error - Optional stable error code.
+	 * @param acknowledgedValue - Submitted or restored writable scalar for non-button commands.
 	 */
 	public async commandResult(
 		deviceId: string,
-		command: AppleTvRemoteCommand,
+		command: AppleTvCommand,
 		status: 'success' | 'error',
 		error = '',
+		acknowledgedValue?: number,
 	): Promise<void> {
 		const root = deviceObjectId(deviceId);
-		await Promise.all([
+		const writes = [
 			this.write(`${root}.lastCommand.name`, command),
 			this.write(`${root}.lastCommand.status`, status),
 			this.write(`${root}.lastCommand.error`, error),
 			this.write(`${root}.lastCommand.completedAt`, Date.now()),
-			this.write(appleTvCommandStateId(deviceId, command), false),
-		]);
+		];
+		if (command === 'setVolume' && typeof acknowledgedValue === 'number') {
+			writes.push(this.write(`${root}.volume.level`, acknowledgedValue));
+		} else if (command !== 'setVolume') {
+			writes.push(this.write(appleTvCommandStateId(deviceId, command), false));
+		}
+		await Promise.all(writes);
 	}
 
 	/**
@@ -595,15 +608,23 @@ export class AppleTvProjection {
 	 * @param remoteAvailable - Whether directional and menu commands are supported.
 	 * @param playbackAvailable - Whether media transport commands are supported.
 	 * @param powerAvailable - Whether power commands are supported.
+	 * @param volumeAvailable - Whether absolute volume control is supported.
 	 */
 	private async reconcileControls(
 		deviceId: string,
 		remoteAvailable: boolean,
 		playbackAvailable: boolean,
 		powerAvailable: boolean,
+		volumeAvailable: boolean,
 	): Promise<void> {
 		await this.reconcile(
-			appleTvControlObjectDefinitions(deviceId, remoteAvailable, playbackAvailable, powerAvailable),
+			appleTvControlObjectDefinitions(
+				deviceId,
+				remoteAvailable,
+				playbackAvailable,
+				powerAvailable,
+				volumeAvailable,
+			),
 		);
 	}
 

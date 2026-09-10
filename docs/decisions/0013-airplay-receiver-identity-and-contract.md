@@ -42,7 +42,7 @@ The initial per-device state contract is:
 | State suffix          | Type    | Role            | Read | Write | Meaning                                        |
 | --------------------- | ------- | --------------- | ---- | ----- | ---------------------------------------------- |
 | `info.name`           | string  | `info.name`     | yes  | no    | Latest display name                            |
-| `info.type`           | string  | `info.type`     | yes  | no    | Constant `airplayReceiver`                     |
+| `info.type`           | string  | `text`          | yes  | no    | Constant `airplayReceiver`                     |
 | `info.model`          | string  | `info.hardware` | yes  | no    | Latest reported model or empty                 |
 | `info.deviceId`       | string  | `text`          | yes  | no    | Stable normalized protocol ID                  |
 | `info.lastSeen`       | number  | `value.time`    | yes  | no    | Last successful scan containing the receiver   |

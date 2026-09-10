@@ -340,12 +340,13 @@ class AppleTvProjection {
    */
   async snapshot(deviceId, snapshot) {
     const root = (0, import_objectDefinitions.deviceObjectId)(deviceId);
-    if (snapshot.capabilities.remote || snapshot.capabilities.playback || snapshot.capabilities.power) {
+    if (snapshot.capabilities.remote || snapshot.capabilities.playback || snapshot.capabilities.power || snapshot.capabilities.volume) {
       await this.reconcileControls(
         deviceId,
         snapshot.capabilities.remote,
         snapshot.capabilities.playback,
-        snapshot.capabilities.power
+        snapshot.capabilities.power,
+        snapshot.capabilities.volume
       );
     }
     if (snapshot.capabilities.apps) {
@@ -481,16 +482,22 @@ class AppleTvProjection {
    * @param command - Public remote command name.
    * @param status - Stable result status.
    * @param error - Optional stable error code.
+   * @param acknowledgedValue - Submitted or restored writable scalar for non-button commands.
    */
-  async commandResult(deviceId, command, status, error = "") {
+  async commandResult(deviceId, command, status, error = "", acknowledgedValue) {
     const root = (0, import_objectDefinitions.deviceObjectId)(deviceId);
-    await Promise.all([
+    const writes = [
       this.write(`${root}.lastCommand.name`, command),
       this.write(`${root}.lastCommand.status`, status),
       this.write(`${root}.lastCommand.error`, error),
-      this.write(`${root}.lastCommand.completedAt`, Date.now()),
-      this.write((0, import_objectDefinitions.appleTvCommandStateId)(deviceId, command), false)
-    ]);
+      this.write(`${root}.lastCommand.completedAt`, Date.now())
+    ];
+    if (command === "setVolume" && typeof acknowledgedValue === "number") {
+      writes.push(this.write(`${root}.volume.level`, acknowledgedValue));
+    } else if (command !== "setVolume") {
+      writes.push(this.write((0, import_objectDefinitions.appleTvCommandStateId)(deviceId, command), false));
+    }
+    await Promise.all(writes);
   }
   /**
    * Writes aggregate adapter status.
@@ -534,10 +541,17 @@ class AppleTvProjection {
    * @param remoteAvailable - Whether directional and menu commands are supported.
    * @param playbackAvailable - Whether media transport commands are supported.
    * @param powerAvailable - Whether power commands are supported.
+   * @param volumeAvailable - Whether absolute volume control is supported.
    */
-  async reconcileControls(deviceId, remoteAvailable, playbackAvailable, powerAvailable) {
+  async reconcileControls(deviceId, remoteAvailable, playbackAvailable, powerAvailable, volumeAvailable) {
     await this.reconcile(
-      (0, import_objectDefinitions.appleTvControlObjectDefinitions)(deviceId, remoteAvailable, playbackAvailable, powerAvailable)
+      (0, import_objectDefinitions.appleTvControlObjectDefinitions)(
+        deviceId,
+        remoteAvailable,
+        playbackAvailable,
+        powerAvailable,
+        volumeAvailable
+      )
     );
   }
   /**

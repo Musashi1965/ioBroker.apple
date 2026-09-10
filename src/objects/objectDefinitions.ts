@@ -87,12 +87,14 @@ export function instanceObjectDefinitions(): ObjectDefinition[] {
  * @param remoteAvailable - Whether writable navigation states may be exposed.
  * @param powerAvailable - Whether writable power states may be exposed.
  * @param playbackAvailable - Whether writable media transport states may be exposed.
+ * @param volumeAvailable - Whether writable absolute volume may be exposed.
  */
 export function appleTvObjectDefinitions(
 	target: DiscoveredAppleTv,
 	remoteAvailable: boolean,
 	powerAvailable = false,
 	playbackAvailable = remoteAvailable,
+	volumeAvailable = false,
 ): ObjectDefinition[] {
 	const root = deviceObjectId(target.deviceId);
 	const definitions: ObjectDefinition[] = [
@@ -106,7 +108,7 @@ export function appleTvObjectDefinitions(
 		},
 		channel(`${root}.info`, 'Information'),
 		state(`${root}.info.name`, 'Display name', stringCommon('info.name', '')),
-		state(`${root}.info.type`, 'Device type', stringCommon('info.type', 'appletv')),
+		state(`${root}.info.type`, 'Device type', stringCommon('text', 'appletv')),
 		state(`${root}.info.model`, 'Hardware model', stringCommon('info.hardware', '')),
 		state(`${root}.info.paired`, 'Paired', booleanCommon('indicator', false)),
 		state(`${root}.info.lastSeen`, 'Last seen', numberCommon('value.time', 0)),
@@ -137,7 +139,7 @@ export function appleTvObjectDefinitions(
 		state(`${root}.nowPlaying.isPlaying`, 'Playing', booleanCommon('media.state', false)),
 		channel(`${root}.volume`, 'Volume'),
 		state(`${root}.volume.available`, 'Volume available', booleanCommon('indicator', false)),
-		state(`${root}.volume.level`, 'Volume', numberCommon('level.volume', 0, { min: 0, max: 100, unit: '%' })),
+		state(`${root}.volume.level`, 'Volume', appleTvVolumeCommon(volumeAvailable)),
 		state(`${root}.volume.muted`, 'Muted', booleanCommon('media.mute', false)),
 		channel(`${root}.apps`, 'Apps'),
 		state(`${root}.apps.count`, 'Launchable app count', numberCommon('value', 0, { min: 0 })),
@@ -154,9 +156,15 @@ export function appleTvObjectDefinitions(
 		state(`${root}.lastCommand.completedAt`, 'Command completed at', numberCommon('value.time', 0)),
 	];
 
-	if (remoteAvailable || playbackAvailable || powerAvailable) {
+	if (remoteAvailable || playbackAvailable || powerAvailable || volumeAvailable) {
 		definitions.push(
-			...appleTvControlObjectDefinitions(target.deviceId, remoteAvailable, playbackAvailable, powerAvailable),
+			...appleTvControlObjectDefinitions(
+				target.deviceId,
+				remoteAvailable,
+				playbackAvailable,
+				powerAvailable,
+				volumeAvailable,
+			),
 		);
 	}
 
@@ -181,7 +189,7 @@ export function airPlayReceiverObjectDefinitions(target: DiscoveredAirPlayReceiv
 		},
 		channel(`${root}.info`, 'Information'),
 		state(`${root}.info.name`, 'Display name', stringCommon('info.name', '')),
-		state(`${root}.info.type`, 'Device type', stringCommon('info.type', 'airplayReceiver')),
+		state(`${root}.info.type`, 'Device type', stringCommon('text', 'airplayReceiver')),
 		state(`${root}.info.model`, 'Hardware model', stringCommon('info.hardware', '')),
 		state(`${root}.info.deviceId`, 'Stable protocol device ID', stringCommon('text', '')),
 		state(`${root}.info.lastSeen`, 'Last seen', numberCommon('value.time', 0)),
@@ -211,7 +219,7 @@ export function homePodObjectDefinitions(target: DiscoveredHomePod): ObjectDefin
 		},
 		channel(`${root}.info`, 'Information'),
 		state(`${root}.info.name`, 'Display name', stringCommon('info.name', '')),
-		state(`${root}.info.type`, 'Device type', stringCommon('info.type', 'homepod')),
+		state(`${root}.info.type`, 'Device type', stringCommon('text', 'homepod')),
 		state(`${root}.info.model`, 'Hardware model', stringCommon('info.hardware', '')),
 		state(`${root}.info.deviceId`, 'Stable protocol device ID', stringCommon('text', '')),
 		state(`${root}.info.lastSeen`, 'Last seen', numberCommon('value.time', 0)),
@@ -240,7 +248,7 @@ export function homePodObjectDefinitions(target: DiscoveredHomePod): ObjectDefin
 		state(`${root}.nowPlaying.isPlaying`, 'Playing', booleanCommon('media.state', false)),
 		channel(`${root}.volume`, 'Volume'),
 		state(`${root}.volume.available`, 'Volume available', booleanCommon('indicator', false)),
-		state(`${root}.volume.level`, 'Volume', numberCommon('level.volume', 0, { min: 0, max: 100, unit: '%' })),
+		state(`${root}.volume.level`, 'Volume', numberCommon('value.volume', 0, { min: 0, max: 100, unit: '%' })),
 		state(`${root}.volume.muted`, 'Muted', booleanCommon('media.mute', false)),
 		channel(`${root}.lastCommand`, 'Last command'),
 		state(`${root}.lastCommand.name`, 'Command name', stringCommon('text', '')),
@@ -281,7 +289,7 @@ export function homePodControlObjectDefinitions(
 	definitions.push(
 		state(`${root}.volume.level`, 'Volume', {
 			type: 'number',
-			role: 'level.volume',
+			role: volumeAvailable ? 'level.volume' : 'value.volume',
 			read: true,
 			write: volumeAvailable,
 			def: 0,
@@ -447,12 +455,14 @@ function shortBundleIdHash(bundleId: string): string {
  * @param remoteAvailable - Whether directional and menu commands are supported.
  * @param playbackAvailable - Whether media transport commands are supported.
  * @param powerAvailable - Whether power commands are supported.
+ * @param volumeAvailable - Whether absolute volume control is supported.
  */
 export function appleTvControlObjectDefinitions(
 	deviceId: string,
 	remoteAvailable = true,
 	playbackAvailable = true,
 	powerAvailable = false,
+	volumeAvailable = false,
 ): ObjectDefinition[] {
 	const root = deviceObjectId(deviceId);
 	const definitions: ObjectDefinition[] = [];
@@ -470,6 +480,9 @@ export function appleTvControlObjectDefinitions(
 	}
 	if (powerAvailable) {
 		definitions.push(...commandButtons(root, 'power', POWER_COMMANDS));
+	}
+	if (volumeAvailable) {
+		definitions.push(state(`${root}.volume.level`, 'Volume', appleTvVolumeCommon(true)));
 	}
 	return definitions;
 }
@@ -618,4 +631,22 @@ function numberCommon(
 	metadata: Pick<ioBroker.StateCommon, 'min' | 'max' | 'unit'> = {},
 ): StateCommonWithoutName {
 	return { type: 'number', role, read: true, write: false, def, ...metadata };
+}
+
+/**
+ * Creates Apple TV volume metadata with the checker-valid role for its current capability.
+ *
+ * @param volumeAvailable - Whether absolute volume control is currently supported.
+ */
+function appleTvVolumeCommon(volumeAvailable: boolean): StateCommonWithoutName {
+	return {
+		type: 'number',
+		role: volumeAvailable ? 'level.volume' : 'value.volume',
+		read: true,
+		write: volumeAvailable,
+		def: 0,
+		min: 0,
+		max: 100,
+		unit: '%',
+	};
 }

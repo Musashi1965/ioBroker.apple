@@ -152,6 +152,25 @@ class AppleTvBackend {
       throw normalizeBackendError(error);
     }
   }
+  /**
+   * Sets absolute Apple TV volume after runtime validation.
+   *
+   * @param percent - Finite public volume from 0 through 100.
+   */
+  async setVolume(percent) {
+    const device = this.device;
+    if (device === void 0 || !device.airplay.isConnected) {
+      throw new AppleTvBackendError("not_connected");
+    }
+    if (!this.snapshot.capabilities.volume || !Number.isFinite(percent) || percent < 0 || percent > 100) {
+      throw new AppleTvBackendError("unsupported");
+    }
+    try {
+      await device.volume.set(percent / 100);
+    } catch (error) {
+      throw normalizeBackendError(error);
+    }
+  }
   /** Returns the current launchable-app catalog through Companion Link. */
   async listApps() {
     const apps = this.connectedApps();

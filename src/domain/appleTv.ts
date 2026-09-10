@@ -22,8 +22,14 @@ export type AppleTvPlaybackCommand = 'playPause';
 /** Explicit power commands exposed below the Power channel. */
 export type AppleTvPowerCommand = 'powerOn' | 'powerOff';
 
-/** Complete writable Apple TV command vocabulary dispatched through the SDK remote controllers. */
+/** Absolute Apple TV volume command accepted when the backend reports volume capability. */
+export type AppleTvVolumeCommand = 'setVolume';
+
+/** Complete writable Apple TV button-command vocabulary dispatched through the SDK remote controllers. */
 export type AppleTvRemoteCommand = AppleTvNavigationCommand | AppleTvPlaybackCommand | AppleTvPowerCommand;
+
+/** Complete writable Apple TV command vocabulary. */
+export type AppleTvCommand = AppleTvRemoteCommand | AppleTvVolumeCommand;
 
 /** Capability projection independent from protocol packages. */
 export interface AppleTvCapabilities {

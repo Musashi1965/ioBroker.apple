@@ -27,6 +27,7 @@ import {
 	AppleRuntime,
 	DeviceManagementError,
 	parseAppleTvCommandWrite,
+	parseAppleTvVolumeWrite,
 	parseAppWrite,
 	parseHomePodWrite,
 } from './runtime/appleRuntime';
@@ -75,6 +76,7 @@ class Apple extends utils.Adapter {
 			await this.subscribeStatesAsync('devices.appletv.*.remote.*');
 			await this.subscribeStatesAsync('devices.appletv.*.playback.*');
 			await this.subscribeStatesAsync('devices.appletv.*.power.*');
+			await this.subscribeStatesAsync('devices.appletv.*.volume.*');
 			await this.subscribeStatesAsync('devices.appletv.*.apps.*');
 			await this.subscribeStatesAsync('devices.homepod.*.playback.*');
 			await this.subscribeStatesAsync('devices.homepod.*.volume.*');
@@ -105,6 +107,14 @@ class Apple extends utils.Adapter {
 			void this.runtime.executeRemote(command.deviceId, command.command).catch(error => {
 				const code = error instanceof AppleTvBackendError ? error.code : 'protocol_error';
 				this.log.warn(`Apple TV command failed: ${code}`);
+			});
+			return;
+		}
+		const appleTvVolume = parseAppleTvVolumeWrite(id, state);
+		if (appleTvVolume !== undefined) {
+			void this.runtime.setAppleTvVolume(appleTvVolume.deviceId, appleTvVolume.percent).catch(error => {
+				const code = error instanceof AppleTvBackendError ? error.code : 'protocol_error';
+				this.log.warn(`Apple TV volume command failed: ${code}`);
 			});
 			return;
 		}
