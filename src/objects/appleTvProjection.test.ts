@@ -178,6 +178,37 @@ describe('AppleTvProjection', () => {
 		expect(adapter.value('devices.airplayReceiver.info.deviceCount')).to.equal(4);
 	});
 
+	it('repairs checker-relevant metadata for retained device roots during startup', async () => {
+		const adapter = new ProjectionAdapterFake();
+		const appleTvRoot = 'devices.appletv.020000000001';
+		const homePodRoot = 'devices.homepod.020000000002';
+		const receiverRoot = 'devices.airplayReceiver.020000000003';
+		adapter.objects.push(
+			`${appleTvRoot}.info.type`,
+			`${appleTvRoot}.volume.level`,
+			`${homePodRoot}.info.type`,
+			`${homePodRoot}.volume.level`,
+			`${receiverRoot}.info.type`,
+		);
+		const projection = new AppleTvProjection(adapter);
+
+		await projection.initialize();
+
+		expect(adapter.common(`${appleTvRoot}.info.type`)).to.include({ type: 'string', role: 'text', write: false });
+		expect(adapter.common(`${appleTvRoot}.volume.level`)).to.include({
+			type: 'number',
+			role: 'value',
+			write: false,
+		});
+		expect(adapter.common(`${homePodRoot}.info.type`)).to.include({ type: 'string', role: 'text', write: false });
+		expect(adapter.common(`${homePodRoot}.volume.level`)).to.include({
+			type: 'number',
+			role: 'value',
+			write: false,
+		});
+		expect(adapter.common(`${receiverRoot}.info.type`)).to.include({ type: 'string', role: 'text', write: false });
+	});
+
 	it('projects stable receivers read-only and retains them as unavailable when absent', async () => {
 		const adapter = new ProjectionAdapterFake();
 		const projection = new AppleTvProjection(adapter);
@@ -264,9 +295,11 @@ class ProjectionAdapterFake {
 	public readonly objects: string[] = [];
 	public readonly deleted: string[] = [];
 	public readonly writes: { id: string; value: ioBroker.StateValue; ack: boolean }[] = [];
+	private readonly objectPartials = new Map<string, ioBroker.PartialObject>();
 
-	public extendObjectAsync(id: string, _object: ioBroker.PartialObject): ioBroker.SetObjectPromise {
+	public extendObjectAsync(id: string, object: ioBroker.PartialObject): ioBroker.SetObjectPromise {
 		this.objects.push(id);
+		this.objectPartials.set(id, object);
 		return Promise.resolve({ id });
 	}
 
@@ -299,6 +332,10 @@ class ProjectionAdapterFake {
 
 	public value(id: string): ioBroker.StateValue | undefined {
 		return this.writes.findLast(write => write.id === id)?.value;
+	}
+
+	public common(id: string): ioBroker.PartialObject['common'] | undefined {
+		return this.objectPartials.get(id)?.common;
 	}
 }
 

@@ -248,7 +248,7 @@ export function homePodObjectDefinitions(target: DiscoveredHomePod): ObjectDefin
 		state(`${root}.nowPlaying.isPlaying`, 'Playing', booleanCommon('media.state', false)),
 		channel(`${root}.volume`, 'Volume'),
 		state(`${root}.volume.available`, 'Volume available', booleanCommon('indicator', false)),
-		state(`${root}.volume.level`, 'Volume', numberCommon('value.volume', 0, { min: 0, max: 100, unit: '%' })),
+		state(`${root}.volume.level`, 'Volume', numberCommon('value', 0, { min: 0, max: 100, unit: '%' })),
 		state(`${root}.volume.muted`, 'Muted', booleanCommon('media.mute', false)),
 		channel(`${root}.lastCommand`, 'Last command'),
 		state(`${root}.lastCommand.name`, 'Command name', stringCommon('text', '')),
@@ -289,7 +289,7 @@ export function homePodControlObjectDefinitions(
 	definitions.push(
 		state(`${root}.volume.level`, 'Volume', {
 			type: 'number',
-			role: volumeAvailable ? 'level.volume' : 'value.volume',
+			role: volumeAvailable ? 'level.volume' : 'value',
 			read: true,
 			write: volumeAvailable,
 			def: 0,
@@ -641,7 +641,7 @@ function numberCommon(
 function appleTvVolumeCommon(volumeAvailable: boolean): StateCommonWithoutName {
 	return {
 		type: 'number',
-		role: volumeAvailable ? 'level.volume' : 'value.volume',
+		role: volumeAvailable ? 'level.volume' : 'value',
 		read: true,
 		write: volumeAvailable,
 		def: 0,

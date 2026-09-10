@@ -138,7 +138,7 @@ describe('Apple object definitions', () => {
 		});
 		expect(unavailable.some(entry => entry.id.includes('.playback.'))).to.equal(false);
 		expect(unavailable.find(entry => entry.id.endsWith('.volume.level'))?.object.common).to.include({
-			role: 'value.volume',
+			role: 'value',
 			write: false,
 		});
 		for (const command of HOME_POD_PLAYBACK_COMMANDS) {
@@ -163,7 +163,7 @@ describe('Apple object definitions', () => {
 		const volume = definitions.find(entry => entry.id.endsWith('.volume.level'));
 		const duration = definitions.find(entry => entry.id.endsWith('.nowPlaying.duration'));
 		expect(deviceType?.object.common).to.include({ role: 'text', read: true, write: false });
-		expect(volume?.object.common).to.include({ role: 'value.volume', read: true, write: false });
+		expect(volume?.object.common).to.include({ role: 'value', read: true, write: false });
 		expect(volume?.object.common).to.include({ min: 0, max: 100, unit: '%' });
 		expect(duration?.object.common).to.include({ min: 0, unit: 's' });
 	});

@@ -55,6 +55,7 @@ export class AppleTvProjection {
 	/** Reconciles instance objects and safe startup defaults. */
 	public async initialize(): Promise<void> {
 		await this.reconcile(instanceObjectDefinitions());
+		await this.reconcileKnownDeviceMetadata();
 		await this.markAirPlayReceiversUnavailable(new Set());
 		await this.markHomePodsUnavailable(new Set());
 		await Promise.all([
@@ -805,6 +806,74 @@ export class AppleTvProjection {
 		}
 	}
 
+	/** Repairs checker-relevant metadata for retained adapter-owned device roots during startup. */
+	private async reconcileKnownDeviceMetadata(): Promise<void> {
+		const definitions: { id: string; object: ioBroker.PartialObject }[] = [];
+		const knownRoots = await this.knownDeviceRoots();
+		for (const root of knownRoots.appletv) {
+			definitions.push(
+				stateMetadata(`${root}.info.type`, { type: 'string', role: 'text', read: true, write: false }),
+				stateMetadata(`${root}.volume.level`, {
+					type: 'number',
+					role: 'value',
+					read: true,
+					write: false,
+					min: 0,
+					max: 100,
+					unit: '%',
+				}),
+			);
+		}
+		for (const root of knownRoots.homepod) {
+			definitions.push(
+				stateMetadata(`${root}.info.type`, { type: 'string', role: 'text', read: true, write: false }),
+				stateMetadata(`${root}.volume.level`, {
+					type: 'number',
+					role: 'value',
+					read: true,
+					write: false,
+					min: 0,
+					max: 100,
+					unit: '%',
+				}),
+			);
+		}
+		for (const root of knownRoots.airplayReceiver) {
+			definitions.push(
+				stateMetadata(`${root}.info.type`, { type: 'string', role: 'text', read: true, write: false }),
+			);
+		}
+		await this.reconcile(definitions);
+	}
+
+	/** Finds existing adapter-owned device roots without deleting or creating device inventories. */
+	private async knownDeviceRoots(): Promise<{
+		appletv: Set<string>;
+		homepod: Set<string>;
+		airplayReceiver: Set<string>;
+	}> {
+		const result = {
+			appletv: new Set<string>(),
+			homepod: new Set<string>(),
+			airplayReceiver: new Set<string>(),
+		};
+		const relativePrefix = 'devices.';
+		const absolutePrefix = `${this.adapter.namespace}.${relativePrefix}`;
+		const objects = await this.adapter.getObjectListAsync({
+			startkey: absolutePrefix,
+			endkey: `${absolutePrefix}\u9999`,
+		});
+		for (const row of objects.rows) {
+			const relativeId = row.id.slice(`${this.adapter.namespace}.`.length);
+			const match = /^(devices\.(appletv|homepod|airplayReceiver)\.[0-9a-f]{12})(?:\.|$)/.exec(relativeId);
+			if (match?.[1] === undefined || match[2] === undefined) {
+				continue;
+			}
+			result[match[2] as keyof typeof result].add(match[1]);
+		}
+		return result;
+	}
+
 	/**
 	 * Reconciles object fragments idempotently.
 	 *
@@ -834,4 +903,24 @@ export class AppleTvProjection {
  */
 function appCommandName(action: AppleTvAppAction): 'refreshApps' | 'launchApp' | 'openUrl' {
 	return action === 'refresh' ? 'refreshApps' : action === 'launch' ? 'launchApp' : 'openUrl';
+}
+
+/**
+ * Builds a state metadata-only partial without changing native data or state value.
+ *
+ * @param id - Adapter-relative state ID.
+ * @param common - Checker-relevant state metadata.
+ */
+function stateMetadata(
+	id: string,
+	common: Partial<ioBroker.StateCommon>,
+): { id: string; object: ioBroker.PartialObject } {
+	return {
+		id,
+		object: {
+			type: 'state',
+			common,
+			native: {},
+		},
+	};
 }

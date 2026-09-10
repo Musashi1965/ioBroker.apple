@@ -19,11 +19,11 @@ controllable only when the active backend reports the matching capability.
 Use role `text` for `*.info.type` states. These states remain read-only string
 constants such as `appletv`, `homepod`, and `airplayReceiver`.
 
-Use `value.volume` for read-only volume observations. Use `level.volume` only
+Use `value` for read-only volume observations. Use `level.volume` only
 when `common.write` is `true` and the current backend reports volume control.
 
 For Apple TV, `devices.appletv.<deviceId>.volume.level` starts as read-only
-`value.volume` with percent range 0 through 100. After the backend reports
+`value` with percent range 0 through 100. After the backend reports
 volume capability, the projection reconciles the same state as writable
 `level.volume`. Unacknowledged writes with finite values from 0 through 100 are
 serialized per device, validated against pairing, connection, and current
@@ -36,7 +36,7 @@ state, network endpoints, and installation-specific names remain outside this
 contract.
 
 HomePod keeps the same role split: read-only unavailable/default state uses
-`value.volume`; capability-confirmed volume control uses writable
+`value`; capability-confirmed volume control uses writable
 `level.volume`.
 
 ## Consequences

@@ -66,7 +66,7 @@ The initial per-device read-only state contract is:
 | `nowPlaying.position`     | number  | `value.interval`      | Position in seconds                          |
 | `nowPlaying.isPlaying`    | boolean | `media.state`         | Current playback flag                        |
 | `volume.available`        | boolean | `indicator`           | Current volume availability                  |
-| `volume.level`            | number  | `value.volume` / `level.volume` | Volume from 0 through 100; writable only after volume capability |
+| `volume.level`            | number  | `value` / `level.volume` | Volume from 0 through 100; writable only after volume capability |
 | `volume.muted`            | boolean | `media.mute`          | Current mute state                           |
 | `lastCommand.*`           | scalar  | existing result roles | Last accepted command and stable result      |
 
