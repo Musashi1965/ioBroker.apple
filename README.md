@@ -3,7 +3,7 @@
 <img src="admin/apple-logo.png" alt="ioBroker Apple adapter logo" width="128">
 
 `iobroker.apple` discovers and controls supported Apple media devices in the
-local network. Version 0.3 is the current development baseline. It contains an
+local network. Version 0.4 is the current development baseline. It contains an
 Apple TV vertical slice and a conservative HomePod preview for public hardware
 testing. Its object contracts are designed for ioBroker automations and
 visualizations without exposing Apple protocol details.
@@ -18,7 +18,7 @@ visualizations without exposing Apple protocol details.
 - encrypted, instance-scoped, owner-only pairing credential persistence;
 - automatic reconnect attempts after periodic re-discovery;
 - pushed connection, power, Now Playing, playback, app, and volume state;
-- capability-gated navigation, Play/Pause, wake, and suspend controls;
+- capability-gated navigation, Play/Pause, wake, suspend, and volume controls;
 - launchable application catalog with readable per-app start buttons and a
   capability-gated `apps.openurl` command for known universal or app links;
 - tabbed Admin configuration for general settings, devices, and Apple Music;
@@ -42,11 +42,11 @@ current scope.
 
 ## Open Points / Next Steps
 
-The following work remains between the current version 0.3 development baseline
+The following work remains between the current version 0.4 development baseline
 and the intended first stable adapter release:
 
-- **Complete Apple TV control:** add capability-gated seek/skip, writable
-  volume, artwork, account selection, and audio-output discovery and selection.
+- **Complete Apple TV control:** add capability-gated seek/skip, artwork,
+  account selection, and audio-output discovery and selection.
 - **Validate HomePod and add AirPlay receiver control:** run the HomePod preview
   against representative HomePod and HomePod mini hardware, record pairing,
   state, controls, recovery, restart, and unload results, and keep receivers
@@ -219,6 +219,13 @@ pre-1.0 compatibility and migration policy, are documented in
 ## Changelog
 
 No unreleased changes.
+
+### 0.4.0 - 2026-09-10
+
+- Add capability-gated Apple TV absolute volume control.
+- Repair checker-relevant metadata for existing device objects during startup.
+- Update Admin build dependencies from the three Dependabot PRs and keep
+  `react-color` explicit for the current JSON Config color component.
 
 ### 0.3.3 - 2026-09-06
 

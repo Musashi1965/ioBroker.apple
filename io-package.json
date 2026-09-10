@@ -1,8 +1,21 @@
 {
 	"common": {
 		"name": "apple",
-		"version": "0.3.3",
+		"version": "0.4.0",
 		"news": {
+			"0.4.0": {
+				"en": "Add capability-gated Apple TV volume control, repair existing object metadata, and update Admin build dependencies",
+				"de": "Capability-gesteuerte Apple-TV-Lautstärke ergänzt, bestehende Objekt-Metadaten repariert und Admin-Build-Abhängigkeiten aktualisiert",
+				"ru": "Добавлено управление громкостью Apple TV по возможностям, исправлены метаданные существующих объектов и обновлены зависимости сборки Admin",
+				"pt": "Adiciona controle de volume da Apple TV baseado em capacidades, corrige metadados de objetos existentes e atualiza dependências de build do Admin",
+				"nl": "Voegt capability-gestuurde Apple TV-volumeregeling toe, herstelt bestaande objectmetadata en werkt Admin-buildafhankelijkheden bij",
+				"fr": "Ajoute le contrôle du volume Apple TV selon les capacités, répare les métadonnées d'objets existants et met à jour les dépendances de build Admin",
+				"it": "Aggiunge il controllo volume Apple TV basato sulle capacità, corregge i metadati degli oggetti esistenti e aggiorna le dipendenze di build Admin",
+				"es": "Añade control de volumen de Apple TV según capacidades, corrige metadatos de objetos existentes y actualiza dependencias de compilación de Admin",
+				"pl": "Dodaje sterowanie głośnością Apple TV zależne od możliwości, naprawia metadane istniejących obiektów i aktualizuje zależności budowania Admin",
+				"uk": "Додано керування гучністю Apple TV за можливостями, виправлено метадані наявних об'єктів і оновлено залежності збірки Admin",
+				"zh-cn": "新增基于能力的 Apple TV 音量控制，修复现有对象元数据，并更新 Admin 构建依赖"
+			},
 			"0.3.3": {
 				"en": "Align release news and workflow metadata with ioBroker latest repository checks",
 				"de": "Release-News und Workflow-Metadaten an die Prüfungen des ioBroker-latest-Repository angepasst",

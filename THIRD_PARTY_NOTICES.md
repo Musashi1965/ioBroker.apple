@@ -33,7 +33,7 @@ and is included in the adapter artifact. Runtime adoption is accepted by ADR
 - Projects: `ioBroker/gui-components`, `ioBroker/ioBroker.admin`, and
   `ioBroker/ioBroker.admin-component-template`
 - Reviewed packages: `@iobroker/gui-components@10.2.1` and
-  `@iobroker/json-config@9.0.8`
+  `@iobroker/json-config@9.1.2`
 - Reviewed template: `ioBroker.admin-component-template` version `3.0.5`, commit
   `116026cef4623ac900cf3c3a992b7dd2049744c5`
 - License: MIT
@@ -48,7 +48,7 @@ copyright notice is: Copyright (c) 2022-2026 bluefox
 same as those reproduced in the root `LICENSE` file.
 
 The generated Admin bundle also uses React 19.2.8, MUI 9.4.0, Vite 8.1.5, and
-Module Federation Vite 1.19.1. These tools and libraries are MIT-licensed and
+Module Federation Vite 1.21.2. These tools and libraries are MIT-licensed and
 remain copyright of their respective authors. Source repositories:
 https://github.com/facebook/react, https://github.com/mui/material-ui,
 https://github.com/vitejs/vite, and
