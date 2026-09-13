@@ -70,8 +70,8 @@ and the intended first stable adapter release:
   pagination, caching, and playback resolution. Apple Music metadata will not
   be treated as a directly streamable audio source.
 - **Validate the Admin 8 interface:** complete visual verification of all
-  Generation-2 device tables and both language directions on the representative
-  ioBroker host.
+  Generation-2 device tables in the system-wide ioBroker Admin language on the
+  representative ioBroker host.
 - **Complete release validation:** verify restart, reconnect, compact mode,
   unload, persistence, security, and the public object contract across the
   supported Node.js/OS matrix and a documented real-device matrix; then pass
@@ -179,7 +179,7 @@ documented in
 [ADR 0014](docs/decisions/0014-homepod-transient-control-contract.md).
 Explicit HomePod/AirPlay Receiver adoption and enablement are documented in
 [ADR 0015](docs/decisions/0015-explicit-homepod-and-receiver-management.md).
-The instance-local German/English Admin selection is documented in
+The removed instance-local German/English Admin selection is documented in
 [ADR 0016](docs/decisions/0016-instance-admin-language.md).
 
 ## HomePod public testing

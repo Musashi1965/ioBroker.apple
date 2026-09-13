@@ -6,8 +6,6 @@ declare global {
 		interface AdapterConfig {
 			/** Periodic local discovery interval in seconds. */
 			discoveryInterval: number;
-			/** Optional instance-local Admin interface language. */
-			interfaceLanguage: '' | 'de' | 'en';
 		}
 	}
 }

@@ -25,9 +25,10 @@ official Admin 7 Module Federation interface and imports its controls and icons
 from the Admin 7 React/MUI libraries. Generated production assets live below
 `admin/custom/` and are included in the adapter package.
 
-ADRs 0015 and 0016 later reuse this source/build boundary for HomePod and
-AirPlay Receiver management tables and the two-language instance selector. They
-do not change the accepted Admin-generation or package boundary.
+ADRs 0015 and 0016 later reused this source/build boundary for HomePod and
+AirPlay Receiver management tables and, historically, the two-language instance
+selector. ADR 0016 has since been superseded because current ioBroker checklist
+rules require the Admin UI to follow the system-wide Admin language.
 
 The component consumes the existing adapter message boundary. The candidate
 and paired-device list responses add non-secret structured fields alongside

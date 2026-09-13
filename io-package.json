@@ -83,7 +83,7 @@
 			"zh-cn": "发现并控制本地网络上的 Apple 媒体设备"
 		},
 		"authors": [
-			"C@ptain Ch@os <223081183+Musashi1965@users.noreply.github.com>"
+			"C@ptain Ch@os <butan_akrobat1t@icloud.com>"
 		],
 		"keywords": [
 			"apple",
@@ -124,8 +124,7 @@
 		]
 	},
 	"native": {
-		"discoveryInterval": 60,
-		"interfaceLanguage": ""
+		"discoveryInterval": 60
 	},
 	"objects": [],
 	"instanceObjects": [

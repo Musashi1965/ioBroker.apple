@@ -44,11 +44,8 @@ describe('Admin JSON configuration', () => {
 			lg: 9,
 			xl: 9,
 		});
-		expect(general?.interfaceLanguage).to.deep.include({
-			type: 'custom',
-			name: 'AppleAdminComponents/Components/InterfaceLanguageSelector',
-			guiApi: 2,
-		});
+		expect(general).not.to.have.property('interfaceLanguageHeader');
+		expect(general).not.to.have.property('interfaceLanguage');
 		expect(Object.values(general ?? {}).some(item => item.type === 'password')).to.equal(false);
 	});
 
@@ -112,7 +109,7 @@ describe('Admin JSON configuration', () => {
 	it('ships the custom component source and generated entry point', async () => {
 		const source = await readFile(resolve('src-admin/src/AppleTvManagement.tsx'), 'utf8');
 		const managedSource = await readFile(resolve('src-admin/src/ManagedDiscoveryDevices.tsx'), 'utf8');
-		const languageSource = await readFile(resolve('src-admin/src/InterfaceLanguage.tsx'), 'utf8');
+		const componentsSource = await readFile(resolve('src-admin/src/Components.tsx'), 'utf8');
 		const entry = await readFile(resolve('admin/custom/customComponents.js'), 'utf8');
 		expect(source).to.include('CheckCircleOutlineIcon');
 		expect(source).to.include('PlayCircleOutlineIcon');
@@ -121,12 +118,30 @@ describe('Admin JSON configuration', () => {
 		expect(managedSource).to.include('PlayCircleOutlineIcon');
 		expect(managedSource).to.include('PauseCircleOutlineIcon');
 		expect(managedSource).to.include('DeleteOutlineIcon');
-		expect(languageSource).to.include('ToggleButtonGroup');
-		expect(languageSource).to.include('I18n.setLanguage(value)');
 		expect(source).to.include("from '@iobroker/gui-components'");
 		expect(managedSource).to.include("from '@iobroker/gui-components'");
-		expect(languageSource).to.include("from '@iobroker/gui-components'");
+		expect(componentsSource).not.to.include('InterfaceLanguage');
+		expect(entry).not.to.include('InterfaceLanguageSelector');
+		expect(entry).not.to.include('I18n.setLanguage');
 		expect(entry.length).to.be.greaterThan(100);
+	});
+
+	it('uses public adapter metadata and follows the system-wide Admin language', async () => {
+		const packageJson = JSON.parse(await readFile(resolve('package.json'), 'utf8')) as {
+			author?: { email?: string };
+		};
+		const ioPackage = JSON.parse(await readFile(resolve('io-package.json'), 'utf8')) as {
+			common?: { authors?: string[] };
+			native?: Record<string, unknown>;
+		};
+		const config = JSON.parse(await readFile(resolve('admin/jsonConfig.json'), 'utf8')) as ConfigItem;
+		const authorEmail = packageJson.author?.email ?? '';
+		expect(authorEmail).to.equal('butan_akrobat1t@icloud.com');
+		expect(authorEmail).not.to.match(/@users\.noreply\.github\.com$/);
+		expect(ioPackage.common?.authors?.[0]).to.equal('C@ptain Ch@os <butan_akrobat1t@icloud.com>');
+		expect(ioPackage.common?.authors?.[0]).not.to.match(/@users\.noreply\.github\.com>/);
+		expect(ioPackage.native).not.to.have.property('interfaceLanguage');
+		expect(JSON.stringify(config)).not.to.include('InterfaceLanguageSelector');
 	});
 
 	it('requires Admin 8 for GUI API generation 2', async () => {

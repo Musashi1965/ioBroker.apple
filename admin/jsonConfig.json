@@ -6,16 +6,12 @@
 			"type": "panel",
 			"label": "General",
 			"items": {
-				"interfaceLanguageHeader": { "type": "header", "size": 2, "text": "User interface" },
-				"interfaceLanguage": {
-					"type": "custom",
-					"url": "custom/customComponents.js",
-					"name": "AppleAdminComponents/Components/InterfaceLanguageSelector",
-					"guiApi": 2,
-					"xs": 12,
+				"discoveryHeader": {
+					"type": "header",
+					"size": 2,
+					"text": "Discovery",
 					"newLine": true
 				},
-				"discoveryHeader": { "type": "header", "size": 2, "text": "Discovery", "newLine": true },
 				"adapterLogo": {
 					"type": "staticImage",
 					"src": "apple-logo.png",
@@ -24,7 +20,11 @@
 					"md": 3,
 					"lg": 3,
 					"newLine": true,
-					"style": { "width": 128, "height": 128, "margin": "0 16px 16px 0" }
+					"style": {
+						"width": 128,
+						"height": 128,
+						"margin": "0 16px 16px 0"
+					}
 				},
 				"discoveryInterval": {
 					"type": "number",
@@ -58,7 +58,11 @@
 			"type": "panel",
 			"label": "Devices",
 			"items": {
-				"appleTvHeader": { "type": "header", "size": 2, "text": "Apple TV" },
+				"appleTvHeader": {
+					"type": "header",
+					"size": 2,
+					"text": "Apple TV"
+				},
 				"appleTvDiscoveryOverview": {
 					"type": "textSendTo",
 					"label": "Detected Apple TVs",
@@ -136,7 +140,11 @@
 			"type": "panel",
 			"label": "Apple Music",
 			"items": {
-				"appleMusicHeader": { "type": "header", "size": 2, "text": "Apple Music" },
+				"appleMusicHeader": {
+					"type": "header",
+					"size": 2,
+					"text": "Apple Music"
+				},
 				"appleMusicPlaceholder": {
 					"type": "infoBox",
 					"text": "Apple Music is planned as a separate content service for authorization, catalog, library, playlists, recommendations, and search. No credentials or runtime objects are created yet.",

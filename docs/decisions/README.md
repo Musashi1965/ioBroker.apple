@@ -24,7 +24,8 @@ public-test logging boundary are defined by
 Explicit HomePod/AirPlay Receiver adoption, enablement, persistence, and local
 deletion are defined by
 [ADR 0015](0015-explicit-homepod-and-receiver-management.md).
-The instance-local German/English Admin configuration choice is defined by
+The removed instance-local German/English Admin configuration choice and its
+replacement by system-wide Admin language handling are documented in
 [ADR 0016](0016-instance-admin-language.md).
 The migration of all custom configuration components to Admin 8 and GUI API
 generation 2 is defined by

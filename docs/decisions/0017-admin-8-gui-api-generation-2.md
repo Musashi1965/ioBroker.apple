@@ -5,11 +5,12 @@
 
 ## Context
 
-The dynamic Apple TV, HomePod, AirPlay Receiver, and language controls were
-originally built for Admin 7 with GUI API generation 1. The local Linux aarch64
-test host now provides Admin 8 and GUI API generation 2. Admin 8 intentionally
-refuses to start generation-1 components because its shared React, MUI, and
-ioBroker component libraries are not binary-compatible with the older build.
+The dynamic Apple TV, HomePod, AirPlay Receiver, and, historically, language
+controls were originally built for Admin 7 with GUI API generation 1. The local
+Linux aarch64 test host now provides Admin 8 and GUI API generation 2. Admin 8
+intentionally refuses to start generation-1 components because its shared React,
+MUI, and ioBroker component libraries are not binary-compatible with the older
+build.
 
 The result was a visible loader warning for every custom component while the
 standard JSON Config fields continued to render. Adding only `guiApi: 2` would
@@ -37,9 +38,11 @@ is not changed outside an explicitly authorized release.
 
 ## Consequences
 
-All four custom controls share the same React 19/MUI 9 generation as Admin 8
-and can pass its component-loader gate. The backend message API, native values,
-pairing security, device persistence, and public object tree remain unchanged.
+The custom device-management controls share the same React 19/MUI 9 generation
+as Admin 8 and can pass its component-loader gate. ADR 0016 has since
+superseded and removed the adapter-specific language selector so the Admin UI
+follows the system-wide ioBroker language. The backend message API, pairing
+security, device persistence, and public object tree remain unchanged.
 
 One generated Admin bundle cannot serve both GUI API generations. Restoring
 Admin 7 support would require a separately built and selected generation-1 UI,
@@ -63,9 +66,9 @@ validation uses releases above those tools' minimum Node 22.12 requirement.
 
 ## Validation
 
-Contract tests verify `guiApi: 2`, the Admin 8 global dependency, and absence
-of the legacy component package. Type checking, the production Admin build,
-package tests, the full adapter gate, and Node 22/24/26 tests are mandatory.
-Visual verification on the local Linux aarch64 test host must confirm all four
-controls, both language directions, and absence of component-loader or
-translation warnings before the next release.
+Contract tests verify `guiApi: 2`, the Admin 8 global dependency, absence of
+the legacy component package, and absence of an adapter-specific language
+selector. Type checking, the production Admin build, package tests, the full
+adapter gate, and Node 22/24/26 tests are mandatory. Visual verification on the
+local Linux aarch64 test host must confirm the device-management controls and
+absence of component-loader or translation warnings before the next release.
