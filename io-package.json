@@ -1,8 +1,21 @@
 {
 	"common": {
 		"name": "apple",
-		"version": "0.4.0",
+		"version": "0.4.1",
 		"news": {
+			"0.4.1": {
+				"en": "Address ioBroker latest repository review findings, update testing tooling, and clean package metadata",
+				"de": "ioBroker-Latest-Repository-Reviewpunkte behoben, Testwerkzeuge aktualisiert und Paket-Metadaten bereinigt",
+				"ru": "Исправлены замечания ревью репозитория ioBroker latest, обновлены инструменты тестирования и очищены метаданные пакета",
+				"pt": "Corrige apontamentos da revisão do repositório latest do ioBroker, atualiza ferramentas de teste e limpa metadados do pacote",
+				"nl": "Lost bevindingen uit de ioBroker latest-repositoryreview op, werkt testtools bij en schoont pakketmetadata op",
+				"fr": "Corrige les remarques de revue du dépôt latest ioBroker, met à jour les outils de test et nettoie les métadonnées du paquet",
+				"it": "Corregge i rilievi della revisione del repository latest ioBroker, aggiorna gli strumenti di test e pulisce i metadati del pacchetto",
+				"es": "Corrige observaciones de la revisión del repositorio latest de ioBroker, actualiza herramientas de prueba y limpia metadatos del paquete",
+				"pl": "Poprawia uwagi z przeglądu repozytorium latest ioBroker, aktualizuje narzędzia testowe i porządkuje metadane pakietu",
+				"uk": "Виправлено зауваження ревʼю репозиторію ioBroker latest, оновлено тестові інструменти та очищено метадані пакета",
+				"zh-cn": "修复 ioBroker latest 仓库审核问题，更新测试工具并清理包元数据"
+			},
 			"0.4.0": {
 				"en": "Add capability-gated Apple TV volume control, repair existing object metadata, and update Admin build dependencies",
 				"de": "Capability-gesteuerte Apple-TV-Lautstärke ergänzt, bestehende Objekt-Metadaten repariert und Admin-Build-Abhängigkeiten aktualisiert",

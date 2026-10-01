@@ -220,6 +220,13 @@ pre-1.0 compatibility and migration policy, are documented in
 
 No unreleased changes.
 
+### 0.4.1 - 2026-10-01
+
+- Address ioBroker latest repository review findings.
+- Add public copyright contact details in README and license metadata.
+- Update ioBroker testing tooling, keep the package runtime audit clean, and
+  exclude `CHANGELOG_OLD.md` from npm package contents.
+
 ### 0.4.0 - 2026-09-10
 
 - Add capability-gated Apple TV absolute volume control.
