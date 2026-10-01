@@ -246,7 +246,7 @@ Older pre-public-release changelog entries are stored in
 
 ## License
 
-Copyright (c) 2026 C@ptain Ch@os
+Copyright (c) 2026 C@ptain Ch@os <butan_akrobat1t@icloud.com>
 
 This project is licensed under the [MIT License](LICENSE). Third-party sources
 and dependencies retain their licenses. Apple and related marks are trademarks

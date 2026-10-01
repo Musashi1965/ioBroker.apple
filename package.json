@@ -37,7 +37,7 @@
     "@iobroker/eslint-config": "^2.3.4",
     "@iobroker/gui-components": "10.2.1",
     "@iobroker/json-config": "9.1.2",
-    "@iobroker/testing": "^5.3.0",
+    "@iobroker/testing": "^6.3.0",
     "@module-federation/runtime": "2.8.0",
     "@module-federation/vite": "1.21.2",
     "@mui/icons-material": "9.4.0",
@@ -68,7 +68,6 @@
     "www/",
     "io-package.json",
     "LICENSE",
-    "CHANGELOG_OLD.md",
     "THIRD_PARTY_NOTICES.md"
   ],
   "scripts": {
@@ -124,5 +123,8 @@
   "bugs": {
     "url": "https://github.com/Musashi1965/ioBroker.apple/issues"
   },
-  "readmeFilename": "README.md"
+  "readmeFilename": "README.md",
+  "overrides": {
+    "moment": "^2.31.0"
+  }
 }
