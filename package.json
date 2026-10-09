@@ -25,7 +25,7 @@
   },
   "dependencies": {
     "@basmilius/apple-common": "~0.13.4",
-    "@basmilius/apple-sdk": "~0.13.4",
+    "@basmilius/apple-sdk": "~0.14.1",
     "@iobroker/adapter-core": "^3.4.3"
   },
   "devDependencies": {
