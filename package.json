@@ -38,7 +38,7 @@
     "@iobroker/gui-components": "^10.2.1",
     "@iobroker/json-config": "^9.1.2",
     "@iobroker/testing": "^6.3.0",
-    "@module-federation/runtime": "^2.8.0",
+    "@module-federation/runtime": "^2.9.2",
     "@module-federation/vite": "^1.23.0",
     "@mui/icons-material": "^9.4.0",
     "@mui/material": "^9.4.0",
